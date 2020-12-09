@@ -1,4 +1,4 @@
-package DBconnection;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +14,7 @@ public class DBConnection {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(URL,USER,PASS);
-            System.out.println("Connected to database successfully");
+           // System.out.println("Connected to database successfully");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
