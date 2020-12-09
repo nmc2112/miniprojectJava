@@ -13,10 +13,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import database.DBConnection;
 import database.ListStaff;
 import model.Staff;
 
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class detailForm extends JFrame {
@@ -67,6 +72,15 @@ public class detailForm extends JFrame {
 		getContentPane().add(scrollPane);
 		
 		
+//		Connection connection = (Connection) DBConnection.getConnection();
+//		String sql  = "UPDATE tblstaffs SET staff_name = 'Đạt 96' WHERE staff_id = 2";
+//		try {
+//			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+//			preparedStatement.execute();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		DefaultTableModel model = new DefaultTableModel(); 
 		table = new JTable(model);
@@ -83,6 +97,7 @@ public class detailForm extends JFrame {
 			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
+		
 		
 		detailForm.setCellsAlignment(table,SwingConstants.CENTER);
 	
