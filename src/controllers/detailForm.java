@@ -25,12 +25,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JSeparator;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class detailForm extends JFrame {
 	private JFrame frame;
@@ -75,15 +83,16 @@ public class detailForm extends JFrame {
     }
 	
 	public detailForm() {
+		getContentPane().setBackground(Color.WHITE);
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		frame.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(150, 0, 1233, 845);
+		setBounds(150, 0, 1315, 1031);
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(269, 127, 920, 646);
+		scrollPane.setBounds(299, 127, 920, 547);
 		getContentPane().add(scrollPane);
 
 		DefaultTableModel model = new DefaultTableModel(); 
@@ -98,11 +107,7 @@ public class detailForm extends JFrame {
         model.addColumn("Vị Trí");
         model.addColumn("Năm Bắt Đầu");
         
-        ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id");
-		for (Staff staff : staffList) {
-			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
-	        model.addRow(data);
-		}
+        refreshTable(model);
 		
 		
 		detailForm.setCellsAlignment(table,SwingConstants.CENTER);
@@ -200,12 +205,7 @@ public class detailForm extends JFrame {
 				try {
 					PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 					preparedStatement.execute();
-					model.setRowCount(0);
-					ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id");
-					for (Staff staff : staffList) {
-						String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
-				        model.addRow(data);
-					}
+					refreshTable(model);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -225,7 +225,58 @@ public class detailForm extends JFrame {
 		txtYear.setBounds(10, 634, 237, 41);
 		getContentPane().add(txtYear);
 		
+		JButton btnDelete = new JButton("XOÁ");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				String id = model.getValueAt(table.getSelectedRow(), 0).toString();
+				System.out.println(id);
+	            Connection connection = (Connection) DBConnection.getConnection();
+	    		String sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
+				
+	    		try {
+	    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+	    			preparedStatement.execute();
+	    			refreshTable(model);
+	    		} catch (SQLException e) {
+	    			// TODO Auto-generated catch block
+	    			e.printStackTrace();
+	    		}
+				
+			}
+		});
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnDelete.setBounds(299, 706, 138, 41);
+		getContentPane().add(btnDelete);
+		
+		JButton btnNewButton = new JButton("1");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnNewButton.setBounds(789, 704, 42, 42);
+		getContentPane().add(btnNewButton);
 		
 		
+		 JButton b = new JButton();
+		b.setBounds(0,70,500,500);
+		frame.getContentPane().add(b);
+		
+	}
+	
+	public void refreshTable(DefaultTableModel model) {
+		model.setRowCount(0);
+		ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id");
+		for (Staff staff : staffList) {
+			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+	        model.addRow(data);
+		}
 	}
 }
