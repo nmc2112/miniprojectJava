@@ -76,38 +76,31 @@ public class detailForm extends JFrame {
 	
 	public detailForm() {
 		frame = new JFrame();
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		frame.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1233, 845);
+		setBounds(150, 0, 1233, 845);
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(269, 114, 920, 659);
+		scrollPane.setBounds(269, 127, 920, 646);
 		getContentPane().add(scrollPane);
-		
-		
-//		Connection connection = (Connection) DBConnection.getConnection();
-//		String sql  = "UPDATE tblstaffs SET staff_name = 'Đạt 96' WHERE staff_id = 2";
-//		try {
-//			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-//			preparedStatement.execute();
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
+
 		DefaultTableModel model = new DefaultTableModel(); 
 		table = new JTable(model);
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		model.addColumn("ID"); 
         model.addColumn("Tên");
         model.addColumn("Tuổi");
+        model.addColumn("Giới Tính");
+        model.addColumn("Địa Chỉ");
         model.addColumn("Lương");
         model.addColumn("Vị Trí");
         model.addColumn("Năm Bắt Đầu");
         
         ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id");
 		for (Staff staff : staffList) {
-			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
 		
@@ -119,7 +112,7 @@ public class detailForm extends JFrame {
 		JButton btnAdd = new JButton("THÊM");
 		
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnAdd.setBounds(10, 732, 237, 41);
+		btnAdd.setBounds(10, 706, 237, 41);
 		getContentPane().add(btnAdd);
 		
 		JLabel lblName = new JLabel("Tên");
@@ -187,21 +180,19 @@ public class detailForm extends JFrame {
 				double staff_salary = 0;
 				int staff_startYearofwork = Integer.parseInt(txtYear.getText());
 				int year = 2020 - staff_startYearofwork;
-				switch(position_name) {
-					case "công nhân" : {
-						position_id = 1;
-						staff_salary = 4 * Math.pow(1.02, year);
-					}
-					case "nhân viên" : {
-						position_id = 2;
-						staff_salary = 7 * Math.pow(1.02, year);
-					}
-					case "kỹ sư" : {
-						position_id = 3;
-						staff_salary = 10 * Math.pow(1.02, year);
-					}
+				if(position_name.equals("công nhân")){
+					position_id = 1;
+					staff_salary = 4 * Math.pow(1.02, year);
 				}
-				
+				if(position_name.equals("nhân viên")){
+					position_id = 2;
+					staff_salary = 7 * Math.pow(1.02, year);
+				}
+				if(position_name.equals("kỹ sư")){
+					position_id = 3;
+					staff_salary = 10 * Math.pow(1.02, year);
+				}
+				System.out.println(position_id);
 				Connection connection = (Connection) DBConnection.getConnection();
 				String sql  = "INSERT INTO tblstaffs(staff_name, staff_age, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork)"
 						+ "VALUES('" + staff_name + "'," + staff_age + ",'" + staff_gender + "','" + staff_address + "'," + staff_salary + "," + position_id + " , " + staff_startYearofwork + ")";
