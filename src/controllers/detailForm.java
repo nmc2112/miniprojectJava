@@ -3,6 +3,7 @@ package controllers;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -13,11 +14,18 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+
+import database.DBConnection;
 import database.ListStaff;
 import model.Staff;
 
 import java.awt.Font;
 import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class detailForm extends JFrame {
 	private JFrame frame;
@@ -87,6 +95,34 @@ public class detailForm extends JFrame {
 		detailForm.setCellsAlignment(table,SwingConstants.CENTER);
 	
 		scrollPane.setViewportView(table);
+		
+		JButton btnDelete = new JButton("XOÁ");
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				String id = model.getValueAt(table.getSelectedRow(), 0).toString();
+				System.out.println(id);
+	            Connection connection = (Connection) DBConnection.getConnection();
+	    		String sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
+				
+	    		try {
+	    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+	    			preparedStatement.execute();
+	    		} catch (SQLException e) {
+	    			// TODO Auto-generated catch block
+	    			e.printStackTrace();
+	    		}
+				
+			}
+		});
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnDelete.setBounds(220, 36, 138, 55);
+		getContentPane().add(btnDelete);
+		
+		 JButton b = new JButton();
+		b.setBounds(0,70,500,500);
+		frame.getContentPane().add(b);
 		
 	}
 }
