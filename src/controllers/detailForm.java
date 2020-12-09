@@ -1,39 +1,92 @@
 package controllers;
 
-import java.util.ArrayList;
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
-import javax.swing.*;    
-import javax.swing.event.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import database.ListStaff;
 import model.Staff;
 
-public class detailForm {
-    JFrame f;
- 
-    detailForm() {
-        f = new JFrame();
-        DefaultTableModel model = new DefaultTableModel(); 
-        JTable jt = new JTable(model);
-        model.addColumn("ID"); 
-        model.addColumn("NAME");
-        model.addColumn("SALARY");
-        ArrayList<Staff> staffList = new ListStaff().list("*"," WHERE 1=1");
-		for (Staff staff : staffList) {
-			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_salary())};
-	        model.addRow(data);
-		} 
+import java.awt.Font;
+import java.util.ArrayList;
+
+public class detailForm extends JFrame {
+	private JFrame frame;
+	private JTable table;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					detailForm frame = new detailForm();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	
+	 public static void setCellsAlignment(JTable table, int alignment)
+    {
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(alignment);
+
+        TableModel tableModel = table.getModel();
+
+        for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++)
+        {
+            table.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRenderer);
+        }
+    }
+	
+	public detailForm() {
+		frame = new JFrame();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1164, 805);
+		getContentPane().setLayout(null);
 		
-        jt.setBounds(30, 40, 200, 300);
-        JScrollPane sp = new JScrollPane(jt);
-        f.add(sp);
- 
-        f.setSize(500, 300);
-        f.setVisible(true);
-    }
- 
-    public static void main(String[] args) {
-        new detailForm();
-    }
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(220, 119, 920, 639);
+		getContentPane().add(scrollPane);
+		
+		
+		
+		DefaultTableModel model = new DefaultTableModel(); 
+		table = new JTable(model);
+		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		model.addColumn("ID"); 
+        model.addColumn("Tên");
+        model.addColumn("Tuổi");
+        model.addColumn("Lương");
+        model.addColumn("Vị Trí");
+        model.addColumn("Năm Bắt Đầu");
+        
+        ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id");
+		for (Staff staff : staffList) {
+			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+	        model.addRow(data);
+		}
+		
+		detailForm.setCellsAlignment(table,SwingConstants.CENTER);
+	
+		scrollPane.setViewportView(table);
+		
+	}
 }
