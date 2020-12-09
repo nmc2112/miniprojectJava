@@ -170,7 +170,6 @@ public class detailForm extends JFrame {
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(10, 535, 237, 41);
 		getContentPane().add(comboBox);
-		//add value to combobox
 		ArrayList<Position> positionList = new ListPosition().list("*"," WHERE 1=1");
 		for (Position position : positionList) {
 			comboBox.addItem(position.getPosition_name());
@@ -183,8 +182,44 @@ public class detailForm extends JFrame {
 				String staff_age = txtAge.getText();
 				String staff_gender = txtGender.getText();
 				String staff_address = txtAddress.getText();
-				String position_id = comboBox.getSelectedItem().toString();
-				System.out.println(position_id);
+				String position_name = comboBox.getSelectedItem().toString();
+				int position_id = 0;
+				double staff_salary = 0;
+				int staff_startYearofwork = Integer.parseInt(txtYear.getText());
+				int year = 2020 - staff_startYearofwork;
+				switch(position_name) {
+					case "công nhân" : {
+						position_id = 1;
+						staff_salary = 4 * Math.pow(1.02, year);
+					}
+					case "nhân viên" : {
+						position_id = 2;
+						staff_salary = 7 * Math.pow(1.02, year);
+					}
+					case "kỹ sư" : {
+						position_id = 3;
+						staff_salary = 10 * Math.pow(1.02, year);
+					}
+				}
+				
+				Connection connection = (Connection) DBConnection.getConnection();
+				String sql  = "INSERT INTO tblstaffs(staff_name, staff_age, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork)"
+						+ "VALUES('" + staff_name + "'," + staff_age + ",'" + staff_gender + "','" + staff_address + "'," + staff_salary + "," + position_id + " , " + staff_startYearofwork + ")";
+				System.out.println(sql);
+				try {
+					PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+					preparedStatement.execute();
+					model.setRowCount(0);
+					ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id");
+					for (Staff staff : staffList) {
+						String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+				        model.addRow(data);
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		
