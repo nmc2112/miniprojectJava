@@ -33,6 +33,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
@@ -126,7 +127,7 @@ public class detailForm extends JFrame {
 		getContentPane().add(lblName);
 		
 		txtName = new JTextField();
-		txtName.setBounds(10, 158, 237, 41);
+		txtName.setBounds(10, 158, 237, 35);
 		getContentPane().add(txtName);
 		txtName.setColumns(10);
 		
@@ -137,7 +138,7 @@ public class detailForm extends JFrame {
 		
 		txtAge = new JTextField();
 		txtAge.setColumns(10);
-		txtAge.setBounds(10, 250, 237, 41);
+		txtAge.setBounds(10, 250, 237, 35);
 		getContentPane().add(txtAge);
 		
 		JLabel lblGender = new JLabel("Giới Tính");
@@ -145,10 +146,12 @@ public class detailForm extends JFrame {
 		lblGender.setBounds(21, 313, 115, 34);
 		getContentPane().add(lblGender);
 		
-		txtGender = new JTextField();
-		txtGender.setColumns(10);
-		txtGender.setBounds(10, 344, 237, 41);
-		getContentPane().add(txtGender);
+		JComboBox gendercomboBox = new JComboBox();
+		gendercomboBox.setBounds(10, 344, 237, 41);
+		getContentPane().add(gendercomboBox);
+		gendercomboBox.addItem("Nam");
+		gendercomboBox.addItem("Nữ");
+		
 		
 		JLabel lblName_2_1 = new JLabel("Địa Chỉ");
 		lblName_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -157,7 +160,7 @@ public class detailForm extends JFrame {
 		
 		txtAddress = new JTextField();
 		txtAddress.setColumns(10);
-		txtAddress.setBounds(10, 439, 237, 41);
+		txtAddress.setBounds(10, 439, 237, 35);
 		getContentPane().add(txtAddress);
 		
 		JLabel lblPosition = new JLabel("Vị Trí");
@@ -178,7 +181,7 @@ public class detailForm extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				String staff_name = txtName.getText();
 				String staff_age = txtAge.getText();
-				String staff_gender = txtGender.getText();
+				String staff_gender = gendercomboBox.getSelectedItem().toString();
 				String staff_address = txtAddress.getText();
 				String position_name = comboBox.getSelectedItem().toString();
 				int position_id = 0;
@@ -205,6 +208,7 @@ public class detailForm extends JFrame {
 				try {
 					PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 					preparedStatement.execute();
+					JOptionPane.showMessageDialog(frame, "Người này đã được thêm thành công!");
 					refreshTable(model);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -222,7 +226,7 @@ public class detailForm extends JFrame {
 		
 		txtYear = new JTextField();
 		txtYear.setColumns(10);
-		txtYear.setBounds(10, 634, 237, 41);
+		txtYear.setBounds(10, 634, 237, 35);
 		getContentPane().add(txtYear);
 		
 		JButton btnDelete = new JButton("XOÁ");
@@ -236,17 +240,26 @@ public class detailForm extends JFrame {
 				
 				String id = model.getValueAt(table.getSelectedRow(), 0).toString();
 				System.out.println(id);
+				String sql = null;
 	            Connection connection = (Connection) DBConnection.getConnection();
-	    		String sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
-				
-	    		try {
-	    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-	    			preparedStatement.execute();
-	    			refreshTable(model);
-	    		} catch (SQLException e) {
-	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
-	    		}
+	            int response = JOptionPane.showConfirmDialog(null,
+                        "Bạn có chắc muốn xóa người này?",
+                        "Bạn đang xóa người này", 
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE); 
+	            System.out.println(response);
+	            if(response == 0) {
+	            	sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
+	            	try {
+		    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+		    			preparedStatement.execute();
+		    			refreshTable(model);
+		    		} catch (SQLException e) {
+		    			// TODO Auto-generated catch block
+		    			e.printStackTrace();
+		    		}
+	            }
+	    		
 				
 			}
 		});
@@ -254,20 +267,6 @@ public class detailForm extends JFrame {
 		btnDelete.setBounds(299, 706, 138, 41);
 		getContentPane().add(btnDelete);
 		
-		JButton btnNewButton = new JButton("1");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btnNewButton.setBounds(789, 704, 42, 42);
-		getContentPane().add(btnNewButton);
-		
-		
-		 JButton b = new JButton();
-		b.setBounds(0,70,500,500);
-		frame.getContentPane().add(b);
 		
 	}
 	

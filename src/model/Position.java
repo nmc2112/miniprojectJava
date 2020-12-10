@@ -1,7 +1,10 @@
 package model;
 
+import javax.swing.JComboBox;
+
 public class Position {
 	
+
 	private int position_id;
 	private String position_name;
 	
