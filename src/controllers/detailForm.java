@@ -33,7 +33,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
 import java.awt.Color;
@@ -85,14 +87,13 @@ public class detailForm extends JFrame {
 	public detailForm() {
 		getContentPane().setBackground(Color.WHITE);
 		frame = new JFrame();
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		setExtendedState(frame.MAXIMIZED_BOTH); 
 		frame.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(150, 0, 1315, 1031);
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(299, 127, 920, 547);
+		scrollPane.setBounds(299, 127, 1200, 547);
 		getContentPane().add(scrollPane);
 
 		DefaultTableModel model = new DefaultTableModel(); 
@@ -106,7 +107,18 @@ public class detailForm extends JFrame {
         model.addColumn("Lương");
         model.addColumn("Vị Trí");
         model.addColumn("Năm Bắt Đầu");
-        
+        table.setRowSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+//        if (table.getSelectedRows() != null) {
+//           int[] selectedrows = table.getSelectedRows();
+//           System.out.println(selectedrows.length);
+//           for (int i = 0; i < selectedrows.length; i++)
+//           {
+//
+//                System.out.println(table.getValueAt(selectedrows[i], 0).toString());
+//
+//           }
+//        }
         refreshTable(model);
 		
 		
@@ -126,7 +138,7 @@ public class detailForm extends JFrame {
 		getContentPane().add(lblName);
 		
 		txtName = new JTextField();
-		txtName.setBounds(10, 158, 237, 41);
+		txtName.setBounds(10, 158, 237, 35);
 		getContentPane().add(txtName);
 		txtName.setColumns(10);
 		
@@ -137,7 +149,7 @@ public class detailForm extends JFrame {
 		
 		txtAge = new JTextField();
 		txtAge.setColumns(10);
-		txtAge.setBounds(10, 250, 237, 41);
+		txtAge.setBounds(10, 250, 237, 35);
 		getContentPane().add(txtAge);
 		
 		JLabel lblGender = new JLabel("Giới Tính");
@@ -145,10 +157,12 @@ public class detailForm extends JFrame {
 		lblGender.setBounds(21, 313, 115, 34);
 		getContentPane().add(lblGender);
 		
-		txtGender = new JTextField();
-		txtGender.setColumns(10);
-		txtGender.setBounds(10, 344, 237, 41);
-		getContentPane().add(txtGender);
+		JComboBox gendercomboBox = new JComboBox();
+		gendercomboBox.setBounds(10, 344, 237, 41);
+		getContentPane().add(gendercomboBox);
+		gendercomboBox.addItem("Nam");
+		gendercomboBox.addItem("Nữ");
+		
 		
 		JLabel lblName_2_1 = new JLabel("Địa Chỉ");
 		lblName_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -157,7 +171,7 @@ public class detailForm extends JFrame {
 		
 		txtAddress = new JTextField();
 		txtAddress.setColumns(10);
-		txtAddress.setBounds(10, 439, 237, 41);
+		txtAddress.setBounds(10, 439, 237, 35);
 		getContentPane().add(txtAddress);
 		
 		JLabel lblPosition = new JLabel("Vị Trí");
@@ -178,7 +192,7 @@ public class detailForm extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				String staff_name = txtName.getText();
 				String staff_age = txtAge.getText();
-				String staff_gender = txtGender.getText();
+				String staff_gender = gendercomboBox.getSelectedItem().toString();
 				String staff_address = txtAddress.getText();
 				String position_name = comboBox.getSelectedItem().toString();
 				int position_id = 0;
@@ -205,6 +219,7 @@ public class detailForm extends JFrame {
 				try {
 					PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 					preparedStatement.execute();
+					JOptionPane.showMessageDialog(frame, "Người này đã được thêm thành công!");
 					refreshTable(model);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -222,7 +237,7 @@ public class detailForm extends JFrame {
 		
 		txtYear = new JTextField();
 		txtYear.setColumns(10);
-		txtYear.setBounds(10, 634, 237, 41);
+		txtYear.setBounds(10, 634, 237, 35);
 		getContentPane().add(txtYear);
 		
 		JButton btnDelete = new JButton("XOÁ");
@@ -234,19 +249,42 @@ public class detailForm extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
-				String id = model.getValueAt(table.getSelectedRow(), 0).toString();
-				System.out.println(id);
-	            Connection connection = (Connection) DBConnection.getConnection();
-	    		String sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
+				if (table.getSelectedRows() != null) {
+					
+		           int[] selectedrows = table.getSelectedRows();
+		           String id = null;
+		           String sql = null;
+		           Connection connection = (Connection) DBConnection.getConnection();
+		           
+		           if(selectedrows.length > 0) {
+		        	   int response = JOptionPane.showConfirmDialog(null,
+                        "Bạn có chắc muốn xóa?",
+                        "Bạn đang xóa " + selectedrows.length + " người này", 
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE); 
+		           
+			           if(response == 0) {
+			        	   for (int i = 0; i < selectedrows.length; i++) {
+			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
+			        	   		System.out.println(id);
+			        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
+				            	try {
+					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+					    			preparedStatement.execute();
+					    			refreshTable(model);
+					    		} catch (SQLException e) {
+					    			// TODO Auto-generated catch block
+					    			e.printStackTrace();
+					    		}
+	
+				           }
+			           }
+		           
+		            	
+		            }
+		            else JOptionPane.showMessageDialog(frame, "Bạn chưa chọn ai để xóa");
+		        }
 				
-	    		try {
-	    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-	    			preparedStatement.execute();
-	    			refreshTable(model);
-	    		} catch (SQLException e) {
-	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
-	    		}
 				
 			}
 		});
@@ -254,20 +292,6 @@ public class detailForm extends JFrame {
 		btnDelete.setBounds(299, 706, 138, 41);
 		getContentPane().add(btnDelete);
 		
-		JButton btnNewButton = new JButton("1");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btnNewButton.setBounds(789, 704, 42, 42);
-		getContentPane().add(btnNewButton);
-		
-		
-		 JButton b = new JButton();
-		b.setBounds(0,70,500,500);
-		frame.getContentPane().add(b);
 		
 	}
 	
