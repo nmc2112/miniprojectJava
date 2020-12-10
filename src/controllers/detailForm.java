@@ -93,7 +93,7 @@ public class detailForm extends JFrame {
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(299, 127, 1200, 547);
+		scrollPane.setBounds(270, 158, 1200, 547);
 		getContentPane().add(scrollPane);
 
 		DefaultTableModel model = new DefaultTableModel(); 
@@ -109,16 +109,6 @@ public class detailForm extends JFrame {
         model.addColumn("Năm Bắt Đầu");
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-//        if (table.getSelectedRows() != null) {
-//           int[] selectedrows = table.getSelectedRows();
-//           System.out.println(selectedrows.length);
-//           for (int i = 0; i < selectedrows.length; i++)
-//           {
-//
-//                System.out.println(table.getValueAt(selectedrows[i], 0).toString());
-//
-//           }
-//        }
         refreshTable(model);
 		
 		
@@ -129,7 +119,7 @@ public class detailForm extends JFrame {
 		JButton btnAdd = new JButton("THÊM");
 		
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnAdd.setBounds(10, 706, 237, 41);
+		btnAdd.setBounds(270, 107, 159, 41);
 		getContentPane().add(btnAdd);
 		
 		JLabel lblName = new JLabel("Tên");
@@ -289,8 +279,14 @@ public class detailForm extends JFrame {
 			}
 		});
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnDelete.setBounds(299, 706, 138, 41);
+		btnDelete.setBounds(439, 107, 159, 41);
 		getContentPane().add(btnDelete);
+		
+		JLabel lblNewLabel = new JLabel("DANH SÁCH NHÂN VIÊN");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblNewLabel.setBounds(630, 24, 320, 62);
+		getContentPane().add(lblNewLabel);
 		
 		
 	}
