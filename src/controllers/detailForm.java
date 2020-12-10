@@ -87,14 +87,13 @@ public class detailForm extends JFrame {
 	public detailForm() {
 		getContentPane().setBackground(Color.WHITE);
 		frame = new JFrame();
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		setExtendedState(frame.MAXIMIZED_BOTH); 
 		frame.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(150, 0, 1315, 1031);
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(299, 127, 920, 547);
+		scrollPane.setBounds(299, 127, 1200, 547);
 		getContentPane().add(scrollPane);
 
 		DefaultTableModel model = new DefaultTableModel(); 
@@ -267,6 +266,7 @@ public class detailForm extends JFrame {
 			           if(response == 0) {
 			        	   for (int i = 0; i < selectedrows.length; i++) {
 			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
+			        	   		System.out.println(id);
 			        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
 				            	try {
 					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
