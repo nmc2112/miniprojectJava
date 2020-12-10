@@ -37,10 +37,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JSeparator;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Frame;
 
 public class detailForm extends JFrame {
 	private JFrame frame;
@@ -50,6 +52,7 @@ public class detailForm extends JFrame {
 	private JTextField txtGender;
 	private JTextField txtAddress;
 	private JTextField txtYear;
+	JDialog dialog = new JDialog();
 
 	/**
 	 * Launch the application.
@@ -85,9 +88,9 @@ public class detailForm extends JFrame {
     }
 	
 	public detailForm() {
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		getContentPane().setBackground(Color.WHITE);
 		frame = new JFrame();
-		setExtendedState(frame.MAXIMIZED_BOTH); 
 		frame.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -124,31 +127,31 @@ public class detailForm extends JFrame {
 		
 		JLabel lblName = new JLabel("Tên");
 		lblName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblName.setBounds(21, 127, 115, 34);
+		lblName.setBounds(21, 193, 115, 34);
 		getContentPane().add(lblName);
 		
 		txtName = new JTextField();
-		txtName.setBounds(10, 158, 237, 35);
+		txtName.setBounds(10, 224, 237, 35);
 		getContentPane().add(txtName);
 		txtName.setColumns(10);
 		
 		JLabel lblAge = new JLabel("Tuổi");
 		lblAge.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAge.setBounds(21, 219, 115, 34);
+		lblAge.setBounds(21, 285, 115, 34);
 		getContentPane().add(lblAge);
 		
 		txtAge = new JTextField();
 		txtAge.setColumns(10);
-		txtAge.setBounds(10, 250, 237, 35);
+		txtAge.setBounds(10, 316, 237, 35);
 		getContentPane().add(txtAge);
 		
 		JLabel lblGender = new JLabel("Giới Tính");
 		lblGender.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblGender.setBounds(21, 313, 115, 34);
+		lblGender.setBounds(21, 379, 115, 34);
 		getContentPane().add(lblGender);
 		
 		JComboBox gendercomboBox = new JComboBox();
-		gendercomboBox.setBounds(10, 344, 237, 41);
+		gendercomboBox.setBounds(10, 410, 237, 41);
 		getContentPane().add(gendercomboBox);
 		gendercomboBox.addItem("Nam");
 		gendercomboBox.addItem("Nữ");
@@ -156,21 +159,21 @@ public class detailForm extends JFrame {
 		
 		JLabel lblName_2_1 = new JLabel("Địa Chỉ");
 		lblName_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblName_2_1.setBounds(21, 408, 115, 34);
+		lblName_2_1.setBounds(21, 461, 115, 34);
 		getContentPane().add(lblName_2_1);
 		
 		txtAddress = new JTextField();
 		txtAddress.setColumns(10);
-		txtAddress.setBounds(10, 439, 237, 35);
+		txtAddress.setBounds(10, 492, 237, 35);
 		getContentPane().add(txtAddress);
 		
 		JLabel lblPosition = new JLabel("Vị Trí");
 		lblPosition.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPosition.setBounds(21, 500, 115, 34);
+		lblPosition.setBounds(21, 553, 115, 34);
 		getContentPane().add(lblPosition);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(10, 535, 237, 41);
+		comboBox.setBounds(10, 588, 237, 41);
 		getContentPane().add(comboBox);
 		ArrayList<Position> positionList = new ListPosition().list("*"," WHERE 1=1");
 		for (Position position : positionList) {
@@ -180,41 +183,54 @@ public class detailForm extends JFrame {
 		btnAdd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				boolean flag = true;
 				String staff_name = txtName.getText();
 				String staff_age = txtAge.getText();
 				String staff_gender = gendercomboBox.getSelectedItem().toString();
 				String staff_address = txtAddress.getText();
 				String position_name = comboBox.getSelectedItem().toString();
-				int position_id = 0;
-				double staff_salary = 0;
-				int staff_startYearofwork = Integer.parseInt(txtYear.getText());
-				int year = 2020 - staff_startYearofwork;
-				if(position_name.equals("công nhân")){
-					position_id = 1;
-					staff_salary = 4 * Math.pow(1.02, year);
+				
+				int staff_startYearofwork = 0;
+				if(!txtYear.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtYear.getText()); 
+				
+				if(staff_name.equals("") || staff_age.equals("") || staff_gender.equals("") || staff_address.equals("") || position_name.equals("") || staff_startYearofwork == 0) {
+					JOptionPane.showMessageDialog(frame, "Hãy điền hết các thông tin!");
+					flag = false;
 				}
-				if(position_name.equals("nhân viên")){
-					position_id = 2;
-					staff_salary = 7 * Math.pow(1.02, year);
+				if(flag == true) {
+					int position_id = 0;
+					double staff_salary = 0;
+					
+					int year = 2020 - staff_startYearofwork;
+					if(position_name.equals("công nhân")){
+						position_id = 1;
+						staff_salary = 4 * Math.pow(1.02, year);
+					}
+					if(position_name.equals("nhân viên")){
+						position_id = 2;
+						staff_salary = 7 * Math.pow(1.02, year);
+					}
+					if(position_name.equals("kỹ sư")){
+						position_id = 3;
+						staff_salary = 10 * Math.pow(1.02, year);
+					}
+					System.out.println(position_id);
+					Connection connection = (Connection) DBConnection.getConnection();
+					String sql  = "INSERT INTO tblstaffs(staff_name, staff_age, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork)"
+							+ "VALUES('" + staff_name + "'," + staff_age + ",'" + staff_gender + "','" + staff_address + "'," + staff_salary + " ," + position_id + " , " + staff_startYearofwork + ")";
+					System.out.println(sql);
+					try {
+						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+						preparedStatement.execute();
+						JOptionPane.showMessageDialog(frame, "Người này đã được thêm thành công!");
+						refreshTable(model);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
-				if(position_name.equals("kỹ sư")){
-					position_id = 3;
-					staff_salary = 10 * Math.pow(1.02, year);
-				}
-				System.out.println(position_id);
-				Connection connection = (Connection) DBConnection.getConnection();
-				String sql  = "INSERT INTO tblstaffs(staff_name, staff_age, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork)"
-						+ "VALUES('" + staff_name + "'," + staff_age + ",'" + staff_gender + "','" + staff_address + "'," + staff_salary + "," + position_id + " , " + staff_startYearofwork + ")";
-				System.out.println(sql);
-				try {
-					PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-					preparedStatement.execute();
-					JOptionPane.showMessageDialog(frame, "Người này đã được thêm thành công!");
-					refreshTable(model);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				
 				
 			}
 		});
@@ -222,12 +238,12 @@ public class detailForm extends JFrame {
 		
 		JLabel lblStartYear = new JLabel("Năm Bắt Đầu ");
 		lblStartYear.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStartYear.setBounds(21, 603, 115, 34);
+		lblStartYear.setBounds(21, 639, 115, 34);
 		getContentPane().add(lblStartYear);
 		
 		txtYear = new JTextField();
 		txtYear.setColumns(10);
-		txtYear.setBounds(10, 634, 237, 35);
+		txtYear.setBounds(10, 670, 237, 35);
 		getContentPane().add(txtYear);
 		
 		JButton btnDelete = new JButton("XOÁ");
@@ -261,13 +277,13 @@ public class detailForm extends JFrame {
 				            	try {
 					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 					    			preparedStatement.execute();
-					    			refreshTable(model);
 					    		} catch (SQLException e) {
 					    			// TODO Auto-generated catch block
 					    			e.printStackTrace();
 					    		}
 	
 				           }
+			    			refreshTable(model);
 			           }
 		           
 		            	
@@ -293,7 +309,7 @@ public class detailForm extends JFrame {
 	
 	public void refreshTable(DefaultTableModel model) {
 		model.setRowCount(0);
-		ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id");
+		ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id ORDER BY staff_id");
 		for (Staff staff : staffList) {
 			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
