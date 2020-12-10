@@ -35,6 +35,7 @@ import java.io.File;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
 import java.awt.Color;
@@ -107,7 +108,18 @@ public class detailForm extends JFrame {
         model.addColumn("Lương");
         model.addColumn("Vị Trí");
         model.addColumn("Năm Bắt Đầu");
-        
+        table.setRowSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+//        if (table.getSelectedRows() != null) {
+//           int[] selectedrows = table.getSelectedRows();
+//           System.out.println(selectedrows.length);
+//           for (int i = 0; i < selectedrows.length; i++)
+//           {
+//
+//                System.out.println(table.getValueAt(selectedrows[i], 0).toString());
+//
+//           }
+//        }
         refreshTable(model);
 		
 		
@@ -238,28 +250,41 @@ public class detailForm extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
-				String id = model.getValueAt(table.getSelectedRow(), 0).toString();
-				System.out.println(id);
-				String sql = null;
-	            Connection connection = (Connection) DBConnection.getConnection();
-	            int response = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc muốn xóa người này?",
-                        "Bạn đang xóa người này", 
+				if (table.getSelectedRows() != null) {
+					
+		           int[] selectedrows = table.getSelectedRows();
+		           String id = null;
+		           String sql = null;
+		           Connection connection = (Connection) DBConnection.getConnection();
+		           
+		           if(selectedrows.length > 0) {
+		        	   int response = JOptionPane.showConfirmDialog(null,
+                        "Bạn có chắc muốn xóa?",
+                        "Bạn đang xóa " + selectedrows.length + " người này", 
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE); 
-	            System.out.println(response);
-	            if(response == 0) {
-	            	sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
-	            	try {
-		    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-		    			preparedStatement.execute();
-		    			refreshTable(model);
-		    		} catch (SQLException e) {
-		    			// TODO Auto-generated catch block
-		    			e.printStackTrace();
-		    		}
-	            }
-	    		
+		           
+			           if(response == 0) {
+			        	   for (int i = 0; i < selectedrows.length; i++) {
+			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
+			        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
+				            	try {
+					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+					    			preparedStatement.execute();
+					    			refreshTable(model);
+					    		} catch (SQLException e) {
+					    			// TODO Auto-generated catch block
+					    			e.printStackTrace();
+					    		}
+	
+				           }
+			           }
+		           
+		            	
+		            }
+		            else JOptionPane.showMessageDialog(frame, "Bạn chưa chọn ai để xóa");
+		        }
+				
 				
 			}
 		});
