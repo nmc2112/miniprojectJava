@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import database.DBConnection;
 import database.ListPosition;
@@ -36,6 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JSeparator;
@@ -43,6 +45,8 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Frame;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class detailForm extends JFrame {
 	private JFrame frame;
@@ -53,7 +57,9 @@ public class detailForm extends JFrame {
 	private JTextField txtAddress;
 	private JTextField txtYear;
 	JDialog dialog = new JDialog();
+	private JTextField txtSearch;
 
+	DefaultTableModel model = new DefaultTableModel(); 
 	/**
 	 * Launch the application.
 	 */
@@ -99,8 +105,8 @@ public class detailForm extends JFrame {
 		scrollPane.setBounds(270, 158, 1200, 547);
 		getContentPane().add(scrollPane);
 
-		DefaultTableModel model = new DefaultTableModel(); 
 		table = new JTable(model);
+		model = (DefaultTableModel) table.getModel();
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		model.addColumn("ID"); 
         model.addColumn("Tên");
@@ -108,7 +114,7 @@ public class detailForm extends JFrame {
         model.addColumn("Giới Tính");
         model.addColumn("Địa Chỉ");
         model.addColumn("Lương");
-        model.addColumn("Vị Trí");
+        model.addColumn("Vị Trí"); 
         model.addColumn("Năm Bắt Đầu");
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -304,6 +310,25 @@ public class detailForm extends JFrame {
 		lblNewLabel.setBounds(630, 24, 320, 62);
 		getContentPane().add(lblNewLabel);
 		
+		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String query = txtSearch.getText().toLowerCase();
+				System.out.println(query);
+				filter(query);
+			}
+		});
+		txtSearch.setBounds(1201, 107, 269, 41);
+		getContentPane().add(txtSearch);
+		txtSearch.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Tìm Kiếm");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1.setBounds(1084, 107, 107, 41);
+		getContentPane().add(lblNewLabel_1);
+		
 		
 	}
 	
@@ -314,5 +339,13 @@ public class detailForm extends JFrame {
 			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
+	}
+	
+	public void filter(String query) {
+		TableRowSorter<DefaultTableModel> tablerow = new TableRowSorter<DefaultTableModel>(model);
+		table.setRowSorter(tablerow);
+		
+		tablerow.setRowFilter(RowFilter.regexFilter( "(?i)" + query));
+		
 	}
 }
