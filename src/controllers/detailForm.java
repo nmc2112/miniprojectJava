@@ -28,6 +28,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
@@ -43,11 +46,15 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JSeparator;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.UIManager;
+import java.awt.SystemColor;
 
 public class detailForm extends JFrame {
 	private JFrame frame;
@@ -99,7 +106,7 @@ public class detailForm extends JFrame {
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(27, 158, 1485, 547);
+		scrollPane.setBounds(269, 158, 1243, 547);
 		getContentPane().add(scrollPane);
 
 		table = new JTable(model);
@@ -122,32 +129,44 @@ public class detailForm extends JFrame {
 	
 		scrollPane.setViewportView(table);
 		
-		JButton btnAdd = new JButton("THÊM");
+		JButton btnAdd = new JButton();
+		btnAdd.setForeground(Color.BLACK);
+		btnAdd.setBackground(new Color(50, 205, 50));
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addFrame newframe = new addFrame();
+				newframe.setVisible(true);
+			}
+		});
+		btnAdd.setIcon(new ImageIcon(detailForm.class.getResource("/assets/plus.png")));
+		btnAdd.setText(" THÊM");
 		
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnAdd.setBounds(31, 107, 159, 41);
+		btnAdd.setBounds(270, 115, 113, 33);
 		getContentPane().add(btnAdd);
 		
 		
-		btnAdd.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				addFrame newframe = new addFrame();
-				newframe.setVisible(true);	
-			}
-		});
+		JButton btnEdit = new JButton();
+		btnEdit.setBackground(new Color(255, 255, 0));
+	    btnEdit.setIcon(new ImageIcon(detailForm.class.getResource("/assets/edit.png")));
+	    btnEdit.setText("SỬA");
+	    btnEdit.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		
+	    	}
+	    });
+		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnEdit.setBounds(541, 115, 113, 33);
+		getContentPane().add(btnEdit);
 		
-		JButton btnDelete = new JButton("XOÁ");
+		JButton btnDelete = new JButton();
+		btnDelete.setBackground(new Color(255, 69, 0));
+		btnDelete.setIcon(new ImageIcon(detailForm.class.getResource("/assets/delete.png")));
+		btnDelete.setText(" XÓA");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnDelete.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				
 				if (table.getSelectedRows() != null) {
-					
+//					
 		           int[] selectedrows = table.getSelectedRows();
 		           String id = null;
 		           String sql = null;
@@ -181,12 +200,11 @@ public class detailForm extends JFrame {
 		            }
 		            else JOptionPane.showMessageDialog(frame, "Bạn chưa chọn ai để xóa");
 		        }
-				
-				
+							
 			}
 		});
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnDelete.setBounds(212, 107, 159, 41);
+		btnDelete.setBounds(404, 115, 113, 33);
 		getContentPane().add(btnDelete);
 		
 		JLabel lblNewLabel = new JLabel("DANH SÁCH NHÂN VIÊN");
@@ -204,21 +222,19 @@ public class detailForm extends JFrame {
 				filter(query);
 			}
 		});
-		txtSearch.setBounds(1243, 107, 269, 41);
+		txtSearch.setBounds(1243, 115, 269, 33);
 		getContentPane().add(txtSearch);
 		txtSearch.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Tìm Kiếm");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_1.setBounds(1126, 107, 107, 41);
+		lblNewLabel_1.setBounds(1126, 115, 107, 33);
 		getContentPane().add(lblNewLabel_1);
 		
-		JButton btnEdit = new JButton("SỬA");
-		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnEdit.setBounds(396, 107, 159, 41);
-		getContentPane().add(btnEdit);
+	    
 		
+			
 		
 	}
 	
