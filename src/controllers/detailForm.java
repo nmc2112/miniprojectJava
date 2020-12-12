@@ -345,7 +345,12 @@ public class detailForm extends JFrame {
 		TableRowSorter<DefaultTableModel> tablerow = new TableRowSorter<DefaultTableModel>(model);
 		table.setRowSorter(tablerow);
 		
-		tablerow.setRowFilter(RowFilter.regexFilter( "(?i)" + query));
+		
+		if (query.trim().length() == 0) {
+			tablerow.setRowFilter(null);
+        } else {
+        	tablerow.setRowFilter(RowFilter.regexFilter("(?i)" + query));
+        }
 		
 	}
 }
