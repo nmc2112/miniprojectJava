@@ -1,12 +1,11 @@
 package model;
 
-public class Engineer extends Staff {
-	
+public class Personnel extends Staff {
 	private String staff_major; 
 	private String staff_level;
 	private String staff_academiclevel;
-
-	public Engineer() {
+	
+	public Personnel() {
 		
 	}
 
@@ -33,10 +32,5 @@ public class Engineer extends Staff {
 	public void setStaff_academiclevel(String staff_academiclevel) {
 		this.staff_academiclevel = staff_academiclevel;
 	}
-	
-	
-	
-	
-	
 	
 }

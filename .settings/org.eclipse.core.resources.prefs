@@ -1,3 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/controllers/addEnginnerFrame.java=UTF-8
+encoding//src/controllers/addPersonnelFrame.java=UTF-8
+encoding//src/controllers/addWorkerFrame.java=UTF-8
 encoding//src/controllers/detailForm.java=UTF-8
 encoding//src/model/Position.java=UTF-8

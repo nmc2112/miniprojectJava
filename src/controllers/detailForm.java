@@ -16,7 +16,8 @@ import javax.swing.table.TableRowSorter;
 
 import database.DBConnection;
 import database.ListPosition;
-import database.ListStaff;
+import database.ListEngineer;
+import model.Engineer;
 import model.Position;
 import model.Staff;
 
@@ -51,11 +52,7 @@ import java.awt.event.KeyEvent;
 public class detailForm extends JFrame {
 	private JFrame frame;
 	private JTable table;
-	private JTextField txtName;
-	private JTextField txtAge;
 	private JTextField txtGender;
-	private JTextField txtAddress;
-	private JTextField txtYear;
 	JDialog dialog = new JDialog();
 	private JTextField txtSearch;
 
@@ -102,7 +99,7 @@ public class detailForm extends JFrame {
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(270, 158, 1200, 547);
+		scrollPane.setBounds(27, 158, 1485, 547);
 		getContentPane().add(scrollPane);
 
 		table = new JTable(model);
@@ -110,7 +107,7 @@ public class detailForm extends JFrame {
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		model.addColumn("ID"); 
         model.addColumn("Tên");
-        model.addColumn("Tuổi");
+        model.addColumn("Ngày Sinh");
         model.addColumn("Giới Tính");
         model.addColumn("Địa Chỉ");
         model.addColumn("Lương");
@@ -128,129 +125,17 @@ public class detailForm extends JFrame {
 		JButton btnAdd = new JButton("THÊM");
 		
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnAdd.setBounds(270, 107, 159, 41);
+		btnAdd.setBounds(31, 107, 159, 41);
 		getContentPane().add(btnAdd);
 		
-		JLabel lblName = new JLabel("Tên");
-		lblName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblName.setBounds(21, 193, 115, 34);
-		getContentPane().add(lblName);
-		
-		txtName = new JTextField();
-		txtName.setBounds(10, 224, 237, 35);
-		getContentPane().add(txtName);
-		txtName.setColumns(10);
-		
-		JLabel lblAge = new JLabel("Tuổi");
-		lblAge.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAge.setBounds(21, 285, 115, 34);
-		getContentPane().add(lblAge);
-		
-		txtAge = new JTextField();
-		txtAge.setColumns(10);
-		txtAge.setBounds(10, 316, 237, 35);
-		getContentPane().add(txtAge);
-		
-		JLabel lblGender = new JLabel("Giới Tính");
-		lblGender.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblGender.setBounds(21, 379, 115, 34);
-		getContentPane().add(lblGender);
-		
-		JComboBox gendercomboBox = new JComboBox();
-		gendercomboBox.setBounds(10, 410, 237, 41);
-		getContentPane().add(gendercomboBox);
-		gendercomboBox.addItem("Nam");
-		gendercomboBox.addItem("Nữ");
-		
-		
-		JLabel lblName_2_1 = new JLabel("Địa Chỉ");
-		lblName_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblName_2_1.setBounds(21, 461, 115, 34);
-		getContentPane().add(lblName_2_1);
-		
-		txtAddress = new JTextField();
-		txtAddress.setColumns(10);
-		txtAddress.setBounds(10, 492, 237, 35);
-		getContentPane().add(txtAddress);
-		
-		JLabel lblPosition = new JLabel("Vị Trí");
-		lblPosition.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPosition.setBounds(21, 553, 115, 34);
-		getContentPane().add(lblPosition);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(10, 588, 237, 41);
-		getContentPane().add(comboBox);
-		ArrayList<Position> positionList = new ListPosition().list("*"," WHERE 1=1");
-		for (Position position : positionList) {
-			comboBox.addItem(position.getPosition_name());
-		}
 		
 		btnAdd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				boolean flag = true;
-				String staff_name = txtName.getText();
-				String staff_age = txtAge.getText();
-				String staff_gender = gendercomboBox.getSelectedItem().toString();
-				String staff_address = txtAddress.getText();
-				String position_name = comboBox.getSelectedItem().toString();
-				
-				int staff_startYearofwork = 0;
-				if(!txtYear.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtYear.getText()); 
-				
-				if(staff_name.equals("") || staff_age.equals("") || staff_gender.equals("") || staff_address.equals("") || position_name.equals("") || staff_startYearofwork == 0) {
-					JOptionPane.showMessageDialog(frame, "Hãy điền hết các thông tin!");
-					flag = false;
-				}
-				if(flag == true) {
-					int position_id = 0;
-					double staff_salary = 0;
-					
-					int year = 2020 - staff_startYearofwork;
-					if(position_name.equals("công nhân")){
-						position_id = 1;
-						staff_salary = 4 * Math.pow(1.02, year);
-					}
-					if(position_name.equals("nhân viên")){
-						position_id = 2;
-						staff_salary = 7 * Math.pow(1.02, year);
-					}
-					if(position_name.equals("kỹ sư")){
-						position_id = 3;
-						staff_salary = 10 * Math.pow(1.02, year);
-					}
-					System.out.println(position_id);
-					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "INSERT INTO tblstaffs(staff_name, staff_age, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork)"
-							+ "VALUES('" + staff_name + "'," + staff_age + ",'" + staff_gender + "','" + staff_address + "'," + staff_salary + " ," + position_id + " , " + staff_startYearofwork + ")";
-					System.out.println(sql);
-					try {
-						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-						preparedStatement.execute();
-						JOptionPane.showMessageDialog(frame, "Người này đã được thêm thành công!");
-						refreshTable(model);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-				
-				
+				addFrame newframe = new addFrame();
+				newframe.setVisible(true);	
 			}
 		});
-		
-		
-		JLabel lblStartYear = new JLabel("Năm Bắt Đầu ");
-		lblStartYear.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStartYear.setBounds(21, 639, 115, 34);
-		getContentPane().add(lblStartYear);
-		
-		txtYear = new JTextField();
-		txtYear.setColumns(10);
-		txtYear.setBounds(10, 670, 237, 35);
-		getContentPane().add(txtYear);
 		
 		JButton btnDelete = new JButton("XOÁ");
 		btnDelete.addActionListener(new ActionListener() {
@@ -301,7 +186,7 @@ public class detailForm extends JFrame {
 			}
 		});
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnDelete.setBounds(439, 107, 159, 41);
+		btnDelete.setBounds(212, 107, 159, 41);
 		getContentPane().add(btnDelete);
 		
 		JLabel lblNewLabel = new JLabel("DANH SÁCH NHÂN VIÊN");
@@ -319,24 +204,29 @@ public class detailForm extends JFrame {
 				filter(query);
 			}
 		});
-		txtSearch.setBounds(1201, 107, 269, 41);
+		txtSearch.setBounds(1243, 107, 269, 41);
 		getContentPane().add(txtSearch);
 		txtSearch.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Tìm Kiếm");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_1.setBounds(1084, 107, 107, 41);
+		lblNewLabel_1.setBounds(1126, 107, 107, 41);
 		getContentPane().add(lblNewLabel_1);
+		
+		JButton btnEdit = new JButton("SỬA");
+		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnEdit.setBounds(396, 107, 159, 41);
+		getContentPane().add(btnEdit);
 		
 		
 	}
 	
 	public void refreshTable(DefaultTableModel model) {
 		model.setRowCount(0);
-		ArrayList<Staff> staffList = new ListStaff().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id ORDER BY staff_id");
-		for (Staff staff : staffList) {
-			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),Integer.toString(staff.getStaff_age()),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id ORDER BY staff_id");
+		for (Engineer staff : enginnerList) {
+			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
 	}

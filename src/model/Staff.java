@@ -4,7 +4,7 @@ public class Staff {
 
 	private int staff_id;
 	private String staff_name;
-	private int staff_age;
+	private String staff_DOB; 
 	private String staff_gender;
 	private String staff_address;
 	private int staff_salary;
@@ -26,6 +26,14 @@ public class Staff {
 		
 	}
 	
+	public String getStaff_DOB() {
+		return staff_DOB;
+	}
+
+
+	public void setStaff_DOB(String staff_DOB) {
+		this.staff_DOB = staff_DOB;
+	}
 
 	public int getStaff_id() {
 		return staff_id;
@@ -42,15 +50,6 @@ public class Staff {
 	public void setStaff_name(String staff_name) {
 		this.staff_name = staff_name;
 	}
-
-	public int getStaff_age() {
-		return staff_age;
-	}
-
-	public void setStaff_age(int staff_age) {
-		this.staff_age = staff_age;
-	}
-
 	public String getStaff_gender() {
 		return staff_gender;
 	}

@@ -1,5 +1,5 @@
 package database;
-import model.Staff;
+import model.Engineer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,15 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ListStaff extends DBConnection{
+public class ListEngineer extends DBConnection{
     Connection connection = (Connection) DBConnection.getConnection();
     ResultSet resultSet;
-    Staff staff;
-    public ArrayList<Staff> listStaff = new ArrayList<Staff>();
-    public ListStaff(){
+    Engineer engineer;
+    public ArrayList<Engineer> listengineer = new ArrayList<Engineer>();
+    public ListEngineer(){
 
     }
-    public ArrayList<Staff> list(String columns, String condition){
+    public ArrayList<Engineer> list(String columns, String condition){
         String sql = " SELECT " + columns + " FROM tblstaffs s " + condition;
         int countColumn = 1;
         try {
@@ -24,44 +24,56 @@ public class ListStaff extends DBConnection{
             countColumn = resultSet.getMetaData().getColumnCount();
             String[] columnName = new String[countColumn+1];
             while(resultSet.next()){
-            	staff = new Staff();
+            	engineer = new Engineer();
                 for (int i = 1; i <= countColumn; i++) {
                     columnName[i] = resultSet.getMetaData().getColumnName(i);
                     switch (columnName[i]) {
                         case "staff_id":
-                            staff.setStaff_id(resultSet.getInt(i));
+                        	engineer.setStaff_id(resultSet.getInt(i));
                             break;
                         case "staff_name":
-                            staff.setStaff_name(resultSet.getString(i));
+                        	engineer.setStaff_name(resultSet.getString(i));
                             break;
-                        case "staff_age":
-                            staff.setStaff_age(resultSet.getInt(i));
+                        case "staff_DOB":
+                        	engineer.setStaff_DOB(resultSet.getString(i));
                             break;
                         case "staff_gender":
-                            staff.setStaff_gender(resultSet.getString(i));
+                        	engineer.setStaff_gender(resultSet.getString(i));
                             break;
                         case "staff_address":
-                            staff.setStaff_address(resultSet.getString(i));
+                        	engineer.setStaff_address(resultSet.getString(i));
                             break;
                         case "staff_startYearofwork":
-                            staff.setStaff_startYearofwork(resultSet.getInt(i));
+                        	engineer.setStaff_startYearofwork(resultSet.getInt(i));
+                            break;
+                        case "staff_level":
+                        	engineer.setStaff_level(resultSet.getString(i));
+                            break;
+                        case "staff_major":
+                        	engineer.setStaff_major(resultSet.getString(i));
                             break;
                         case "staff_salary":
-                            staff.setStaff_salary(resultSet.getInt(i));
+                        	engineer.setStaff_salary(resultSet.getInt(i));
+                            break;
+                        case "staff_academiclevel":
+                        	engineer.setStaff_academiclevel(resultSet.getString(i));
+                            break;
                         case "position_id":
-                            staff.setPosition_id(resultSet.getInt(i));
+                        	engineer.setPosition_id(resultSet.getInt(i));
+                            break;
                         case "position_name":
-                            staff.setPosition_name(resultSet.getString(i));
+                        	engineer.setPosition_name(resultSet.getString(i));
+                            break;
                         default:
                             break;
                     }
                 }
-                listStaff.add(staff);
+                listengineer.add(engineer);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return listStaff;
+        return listengineer;
     }
 
 }
