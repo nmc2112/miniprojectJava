@@ -55,9 +55,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.UIManager;
 import java.awt.SystemColor;
+import javax.swing.JTabbedPane;
 
 public class detailForm extends JFrame {
-	private JFrame frame;
+	private JPanel frame;
 	private JTable table;
 	private JTextField txtGender;
 	JDialog dialog = new JDialog();
@@ -100,8 +101,7 @@ public class detailForm extends JFrame {
 	public detailForm() {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		getContentPane().setBackground(Color.WHITE);
-		frame = new JFrame();
-		frame.setUndecorated(true);
+		frame = new JPanel();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
@@ -149,20 +149,20 @@ public class detailForm extends JFrame {
 		JButton btnEdit = new JButton();
 		btnEdit.setBackground(new Color(255, 255, 0));
 	    btnEdit.setIcon(new ImageIcon(detailForm.class.getResource("/assets/edit.png")));
-	    btnEdit.setText("SỬA");
+	    btnEdit.setText(" SỬA");
 	    btnEdit.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		
 	    	}
 	    });
-		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnEdit.setBounds(541, 115, 113, 33);
 		getContentPane().add(btnEdit);
 		
 		JButton btnDelete = new JButton();
 		btnDelete.setBackground(new Color(255, 69, 0));
 		btnDelete.setIcon(new ImageIcon(detailForm.class.getResource("/assets/delete.png")));
-		btnDelete.setText(" XÓA");
+		btnDelete.setText("XÓA");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (table.getSelectedRows() != null) {
