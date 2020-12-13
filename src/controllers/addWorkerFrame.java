@@ -166,7 +166,7 @@ public class addWorkerFrame extends JFrame {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
-						detailForm nextFrame = new detailForm();
+						layout nextFrame = new layout();
 						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
