@@ -40,6 +40,7 @@ import javax.swing.table.TableRowSorter;
 
 import database.DBConnection;
 import database.ListEngineer;
+import model.AdminSession;
 import model.CustomButton;
 import model.DropShadowBorder;
 import model.Engineer;
@@ -62,6 +63,10 @@ public class layout extends JFrame {
 	private JTextField txtSearch;
 	DefaultTableModel model = new DefaultTableModel(); 
 	JLayeredPane layeredPane = new JLayeredPane();
+	
+	private int ad_id = 0;
+	private int role_id = 0;
+	
 
 	/**
 	 * Launch the application.
@@ -72,6 +77,7 @@ public class layout extends JFrame {
 				try {
 					layout frame = new layout();
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -79,10 +85,17 @@ public class layout extends JFrame {
 		});
 	}
 
+	public layout() {
+		ad_id = AdminSession.getInstanceId();
+		role_id = AdminSession.getInstanceroleId();
+		layoutComponent();
+		System.out.println(ad_id);
+		
+	}
 	/**
 	 * Create the frame.
 	 */
-	public layout() {
+	public void layoutComponent() {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1609, 838);
@@ -133,12 +146,22 @@ public class layout extends JFrame {
         JButton btnAdd = new JButton(" THÊM");
 		btnAdd.setForeground(Color.WHITE);
 		btnAdd.setBackground(new Color(50, 205, 50));
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addFrame newframe = new addFrame();
-				newframe.setVisible(true);
-			}
-		});
+		if(role_id == 1) {
+			btnAdd.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					addFrame newframe = new addFrame();
+					newframe.setVisible(true);
+				}
+			});
+		}
+		else{
+			btnAdd.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
+				}
+			});
+//			setVisible(false);
+		}
 		panelTable.setLayout(null);
 		btnAdd.setIcon(new ImageIcon(detailForm.class.getResource("/assets/plus.png")));
 		
