@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import database.DBConnection;
 
@@ -14,9 +16,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import java.awt.event.ActionListener;
@@ -24,6 +31,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -40,6 +51,10 @@ public class addWorkerFrame extends JFrame {
 	private JTextField txtStartYearOfWork;
 	private JTextField txtSalary;
 	JFormattedTextField txtDOB;
+	JButton btnNewButton = new JButton("Chọn Ảnh (< 5MB) ");
+	JLabel lblNewLabel = new JLabel("");
+	String path = "";
+	
 	/**
 	 * Launch the application.
 	 */
@@ -64,7 +79,7 @@ public class addWorkerFrame extends JFrame {
 	}
 	
 	public void frameComponent() {
-		setBounds(100, 100, 682, 666);
+		setBounds(100, 100, 1077, 821);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -73,64 +88,75 @@ public class addWorkerFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblName = new JLabel("Tên");
-		lblName.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblName.setBounds(114, 112, 115, 34);
+		lblName.setForeground(Color.GRAY);
+		lblName.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblName.setBounds(541, 74, 418, 25);
 		contentPane.add(lblName);
 		
 		txtName = new JTextField();
 		txtName.setColumns(10);
-		txtName.setBounds(295, 112, 237, 35);
+		txtName.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
+		txtName.setBounds(541, 109, 418, 35);
 		contentPane.add(txtName);
 		
 		JLabel lblDOB = new JLabel("Ngày Sinh");
-		lblDOB.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblDOB.setBounds(114, 232, 115, 34);
+		lblDOB.setForeground(Color.GRAY);
+		lblDOB.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblDOB.setBounds(541, 231, 115, 34);
 		contentPane.add(lblDOB);
 		
 		JLabel lblGender = new JLabel("Giới Tính");
-		lblGender.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblGender.setBounds(114, 356, 115, 34);
+		lblGender.setForeground(Color.GRAY);
+		lblGender.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblGender.setBounds(541, 414, 115, 34);
 		contentPane.add(lblGender);
 		
 		JComboBox gendercomboBox = new JComboBox();
-		gendercomboBox.setBounds(295, 353, 237, 41);
+		gendercomboBox.setBackground(Color.WHITE);
+		gendercomboBox.setBounds(541, 458, 418, 41);
 		contentPane.add(gendercomboBox);
 		gendercomboBox.addItem("Nam");
 		gendercomboBox.addItem("Nữ");
 		
 		JLabel lblName_2_1 = new JLabel("Địa Chỉ");
-		lblName_2_1.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblName_2_1.setBounds(114, 176, 115, 34);
+		lblName_2_1.setForeground(Color.GRAY);
+		lblName_2_1.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblName_2_1.setBounds(541, 154, 115, 34);
 		contentPane.add(lblName_2_1);
 		
 		txtAddress = new JTextField();
 		txtAddress.setColumns(10);
-		txtAddress.setBounds(295, 174, 237, 35);
+		txtAddress.setBounds(541, 186, 418, 35);
+		txtAddress.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtAddress);
 		
 		JLabel lblStartYear = new JLabel("Năm Bắt Đầu ");
-		lblStartYear.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblStartYear.setBounds(114, 295, 115, 34);
+		lblStartYear.setForeground(Color.GRAY);
+		lblStartYear.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblStartYear.setBounds(541, 325, 115, 34);
 		contentPane.add(lblStartYear);
 		
 		txtStartYearOfWork = new JTextField();
 		txtStartYearOfWork.setColumns(10);
-		txtStartYearOfWork.setBounds(295, 293, 237, 35);
+		txtStartYearOfWork.setBounds(541, 369, 418, 35);
+		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
 		JLabel lblAddStaff = new JLabel("Thêm Công Nhân");
 		lblAddStaff.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAddStaff.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblAddStaff.setBounds(159, 37, 331, 52);
+		lblAddStaff.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		lblAddStaff.setBounds(342, 10, 331, 52);
 		contentPane.add(lblAddStaff);
 		
 		JLabel lblBc = new JLabel("Bậc ");
-		lblBc.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblBc.setBounds(114, 416, 115, 34);
+		lblBc.setForeground(Color.GRAY);
+		lblBc.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblBc.setBounds(541, 509, 115, 34);
 		contentPane.add(lblBc);
 		
 		JComboBox levelcomboBox = new JComboBox();
-		levelcomboBox.setBounds(295, 414, 237, 41);
+		levelcomboBox.setBackground(Color.WHITE);
+		levelcomboBox.setBounds(541, 553, 418, 41);
 		contentPane.add(levelcomboBox);
 		levelcomboBox.addItem("1");
 		levelcomboBox.addItem("2");
@@ -148,19 +174,26 @@ public class addWorkerFrame extends JFrame {
 				String staff_level = levelcomboBox.getSelectedItem().toString();
 				double staff_salary = 0;	
 				int staff_startYearofwork = 0;
+				InputStream staff_img = null;
+				try {
+					staff_img = new FileInputStream(new File(path));
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}  
 				
 				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
 				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
 				
-				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0) {
+				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_img.equals("")) {
 					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
 					flag = false;
 				}
 				
 				if(flag == true) {
 					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level)"
-							+ " VALUES ('" + staff_name + "', '" + staff_gender + "','" + staff_address + "'," + staff_salary + " , 1, " + staff_startYearofwork + ", '" + staff_DOB + "', " + staff_level + ")";
+					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_img)"
+							+ " VALUES ('" + staff_name + "', '" + staff_gender + "','" + staff_address + "'," + staff_salary + " , 1, " + staff_startYearofwork + ", '" + staff_DOB + "', " + staff_level + ", '" + staff_img + "')";
 					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -176,22 +209,25 @@ public class addWorkerFrame extends JFrame {
 				}			
 			}
 		});
-		btnAdd.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnAdd.setBounds(114, 538, 418, 41);
+		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnAdd.setBounds(541, 718, 418, 41);
 		contentPane.add(btnAdd);
 		
 		JLabel lblLng = new JLabel("Lương");
-		lblLng.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblLng.setBounds(114, 479, 115, 34);
+		lblLng.setForeground(Color.GRAY);
+		lblLng.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblLng.setBounds(541, 603, 115, 34);
 		contentPane.add(lblLng);
 		
 		txtSalary = new JTextField();
 		txtSalary.setColumns(10);
-		txtSalary.setBounds(295, 477, 237, 35);
+		txtSalary.setBounds(541, 642, 418, 35);
+		txtSalary.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtSalary);
 		
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		txtDOB = new JFormattedTextField(df);
+		txtDOB.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		txtDOB .addKeyListener(new KeyAdapter() {
 		    public void keyTyped(KeyEvent e) {
 		      char c = e.getKeyChar();
@@ -204,7 +240,49 @@ public class addWorkerFrame extends JFrame {
 		      }
 		    }
 		  });
-		txtDOB.setBounds(295, 235, 237, 34);
+		txtDOB.setBounds(541, 275, 418, 34);
 		contentPane.add(txtDOB);
+		
+		lblNewLabel.setBounds(61, 109, 418, 568);
+		contentPane.add(lblNewLabel);
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			  JFileChooser file = new JFileChooser();
+	          file.setCurrentDirectory(new File(System.getProperty("user.home")));
+	          //filter the files
+	          FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
+	          file.addChoosableFileFilter(filter);
+	          int result = file.showSaveDialog(null);
+	           //if the user click on save in Jfilechooser
+	          if(result == JFileChooser.APPROVE_OPTION){
+	              File selectedFile = file.getSelectedFile();
+	              path = selectedFile.getAbsolutePath();
+	              lblNewLabel.setIcon(ResizeImage(path));
+	          }
+
+	          else if(result == JFileChooser.CANCEL_OPTION){
+	              System.out.println("No File Select");
+	          }
+	          
+	        }
+	    });
+		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnNewButton.setBounds(61, 718, 418, 41);
+		contentPane.add(btnNewButton);
+		
+		JLabel lblnhiDin = new JLabel("Ảnh Đại Diện");
+		lblnhiDin.setForeground(Color.GRAY);
+		lblnhiDin.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblnhiDin.setBounds(61, 74, 418, 25);
+		contentPane.add(lblnhiDin);
 	}
+	
+	public ImageIcon ResizeImage(String ImagePath) {
+        ImageIcon MyImage = new ImageIcon(ImagePath);
+        Image img = MyImage.getImage();
+        Image newImg = img.getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImg);
+        return image;
+    }
 }

@@ -44,6 +44,7 @@ import model.CustomButton;
 import model.DropShadowBorder;
 import model.Engineer;
 import model.RoundedBorder;
+import model.StaffSession;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
@@ -152,8 +153,35 @@ public class layout extends JFrame {
 	    btnEdit.setText(" SỬA");
 	    btnEdit.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		
-	    	}
+	    		StaffSession.cleanStaffSession();
+	    		if (table.getSelectedRows() != null) {
+		           int[] selectedrows = table.getSelectedRows();
+		           String staff_id = null;
+		           int position_id = 0;
+		           String sql = null;
+		           Connection connection = (Connection) DBConnection.getConnection();
+		           
+		           if(selectedrows.length == 1) {
+		        	    staff_id = table.getValueAt(selectedrows[0], 0).toString();
+	        	   		ArrayList<Engineer> enginnerList = new ListEngineer().list("position_id","WHERE staff_id = " + staff_id);
+	        			for (Engineer staff : enginnerList) {
+	        				position_id = staff.getPosition_id();
+	        			}
+	        	   		System.out.println(staff_id);
+	        	   		StaffSession.getInstance(Integer.parseInt(staff_id), position_id);
+	        	   		if(position_id == 1) {
+	        	   			editWorkerFrame workerFrame = new editWorkerFrame();
+	        	   			workerFrame.setVisible(true);
+	        	   		}
+	        	   		else {
+	        	   			editEngineerFrame engineerFrame = new editEngineerFrame(); 
+	        	   			engineerFrame.setVisible(true);
+	        	   		}
+		            }
+		            else JOptionPane.showMessageDialog(contentPane, "Hãy chọn 1 người để sửa!");
+			        }
+								
+			}
 	    });
 		btnEdit.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		btnEdit.setBounds(170, 111, 113, 33);

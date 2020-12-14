@@ -10,6 +10,9 @@ import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import database.DBConnection;
+import database.ListEngineer;
+import model.Engineer;
+import model.StaffSession;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -41,20 +44,26 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class addPersonnelFrame extends JFrame {
+public class editEngineerFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtName;
-	private JTextField txtAddress;
-	private JTextField txtStartYearOfWork;
-	private JTextField txtSalary;
-	JFormattedTextField txtDOB;
-	private JTextField txtMajor;
+	private JTextField txtName = null;
+	private JTextField txtAddress= null;
+	private JTextField txtStartYearOfWork = null;
+	private JTextField txtSalary=null;
+	JFormattedTextField txtDOB = null;
+	private JTextField txtMajor = null;
+	JComboBox levelcomboBox = null;;
+	JComboBox academiclevelcomboBox = null;
+	JComboBox gendercomboBox = null;
 	JButton btnNewButton = new JButton("Chọn Ảnh (< 5MB) ");
 	JLabel lblNewLabel = new JLabel("");
 	String path = "";
+	int staff_id = 0;
+	int position_id = 0;
 	/**
 	 * Launch the application.
 	 */
@@ -62,7 +71,7 @@ public class addPersonnelFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					addPersonnelFrame frame = new addPersonnelFrame();
+					editEngineerFrame frame = new editEngineerFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -74,7 +83,12 @@ public class addPersonnelFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public addPersonnelFrame() {
+	public editEngineerFrame() {
+		staff_id = StaffSession.getInstanceId();
+		position_id = StaffSession.getInstancePositionId();
+		System.out.println("id = " + staff_id);
+		System.out.println("position_id = " + position_id);
+		
 		frameComponent();
 	}
 	
@@ -111,7 +125,7 @@ public class addPersonnelFrame extends JFrame {
 		lblGender.setBounds(622, 341, 115, 34);
 		contentPane.add(lblGender);
 		
-		JComboBox gendercomboBox = new JComboBox();
+		gendercomboBox = new JComboBox();
 		gendercomboBox.setBounds(622, 369, 419, 41);
 		contentPane.add(gendercomboBox);
 		gendercomboBox.addItem("Nam");
@@ -141,10 +155,10 @@ public class addPersonnelFrame extends JFrame {
 		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
-		JLabel lblAddStaff = new JLabel("Thêm Nhân Viên");
+		JLabel lblAddStaff = new JLabel("Sửa Thông Tin");
 		lblAddStaff.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAddStaff.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		lblAddStaff.setBounds(388, 10, 331, 52);
+		lblAddStaff.setBounds(388, 10, 231, 52);
 		contentPane.add(lblAddStaff);
 		
 		JLabel lblBc = new JLabel("Bậc ");
@@ -172,7 +186,7 @@ public class addPersonnelFrame extends JFrame {
 		lblTrnhHc.setBounds(622, 576, 143, 34);
 		contentPane.add(lblTrnhHc);
 		
-		JComboBox academiclevelcomboBox = new JComboBox();
+		academiclevelcomboBox = new JComboBox();
 		academiclevelcomboBox.setBounds(622, 607, 419, 41);
 		contentPane.add(academiclevelcomboBox);
 		academiclevelcomboBox.addItem("Tốt Nghiệp THPT");
@@ -182,56 +196,9 @@ public class addPersonnelFrame extends JFrame {
 		academiclevelcomboBox.addItem("PGS-TS");
 		academiclevelcomboBox.addItem("Giáo Sư");
 		
-		JButton btnAdd = new JButton("THÊM");
+		JButton btnAdd = new JButton("CẬP NHẬT");
 		btnAdd.setBackground(Color.GREEN);
-		btnAdd.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				boolean flag = true;
-				String staff_name = txtName.getText();
-				String staff_DOB = txtDOB.getText();
-				String staff_gender = gendercomboBox.getSelectedItem().toString();
-				String staff_address = txtAddress.getText();
-				String staff_level = levelcomboBox.getSelectedItem().toString();
-				String staff_major = txtMajor.getText();
-				String staff_academiclevel = academiclevelcomboBox.getSelectedItem().toString();
-				double staff_salary = 0;	
-				int staff_startYearofwork = 0;
-				InputStream staff_img = null;
-				try {
-					staff_img = new FileInputStream(new File(path));
-				} catch (FileNotFoundException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}  
-				
-				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
-				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
-				
-				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_major.equals("") || staff_academiclevel.equals("") || staff_img.equals("")) {
-					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
-					flag = false;
-				}
-				
-				if(flag == true) {
-					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_major, staff_academiclevel, staff_img)"
-							+ " VALUES ('" + staff_name + "', '" + staff_gender + "','" + staff_address + "'," + staff_salary + " , 2, " + staff_startYearofwork + ", '" + staff_DOB + "', " + staff_level + ",'" + staff_major + "', '" + staff_academiclevel + "', '" + staff_img + "')";
-					System.out.println(sql);
-					try {
-						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-						preparedStatement.execute();
-						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
-						setVisible(false);
-					} catch (SQLException e1 ) {
-						// TODO Auto-generated catch block
-						e1 .printStackTrace();
-					}
-				}			
-			}
-		});
+		
 		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnAdd.setBounds(622, 744, 418, 41);
 		contentPane.add(btnAdd);
@@ -307,6 +274,77 @@ public class addPersonnelFrame extends JFrame {
 		lblnhiDin.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		lblnhiDin.setBounds(76, 56, 418, 25);
 		contentPane.add(lblnhiDin);
+		
+		JLabel lblPositionName = new JLabel();
+		lblPositionName.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		lblPositionName.setBounds(579, 19, 143, 34);
+		if(position_id == 2) lblPositionName.setText("Nhân Viên");
+		else lblPositionName.setText("Kỹ Sư");
+		contentPane.add(lblPositionName);
+		
+		
+
+		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id WHERE staff_id = " + staff_id);
+		for (Engineer staff : enginnerList) {
+			txtName.setText(staff.getStaff_name());
+			txtAddress.setText(staff.getStaff_address());
+			txtStartYearOfWork.setText(Integer.toString(staff.getStaff_startYearofwork()));
+			txtSalary.setText(Integer.toString(staff.getStaff_salary()));
+			txtDOB.setText(staff.getStaff_DOB());
+			txtMajor.setText(staff.getStaff_major());
+			levelcomboBox.setSelectedItem(staff.getStaff_level());
+			gendercomboBox.setSelectedItem(staff.getStaff_gender());
+			academiclevelcomboBox.setSelectedItem(staff.getStaff_academiclevel());
+			
+		}
+		
+		btnAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean flag = true;
+				String staff_name = txtName.getText();
+				String staff_DOB = txtDOB.getText();
+				String staff_gender = gendercomboBox.getSelectedItem().toString();
+				String staff_address = txtAddress.getText();
+				String staff_level = levelcomboBox.getSelectedItem().toString();
+				String staff_major = txtMajor.getText();
+				String staff_academiclevel = academiclevelcomboBox.getSelectedItem().toString();
+				double staff_salary = 0;	
+				int staff_startYearofwork = 0;
+//				InputStream staff_img = null;
+//				try {
+//					staff_img = new FileInputStream(new File(path));
+//				} catch (FileNotFoundException e2) {
+//					// TODO Auto-generated catch block
+//					e2.printStackTrace();
+//				}  
+				
+				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
+				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
+				
+//				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_major.equals("") || staff_academiclevel.equals("") || staff_img.equals("")) {
+//					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
+//					flag = false;
+//				}
+				
+				if(flag == true) {
+					Connection connection = (Connection) DBConnection.getConnection();
+					String sql  = "UPDATE tblstaffs SET staff_name = '" + staff_name + "', staff_DOB = '"+ staff_DOB + "', staff_gender = '" + staff_gender + "', staff_address = '" + staff_address + "', staff_salary = " + staff_salary + ", staff_major = '"+ staff_major + "', staff_level = " + staff_level + ", staff_DOB = '" + staff_DOB + "', staff_startYearofwork = " +staff_startYearofwork + "', staff_academiclevel = '" + staff_academiclevel + "' WHERE staff_id = " + staff_id ;
+					System.out.println(sql);
+//					try {
+//						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+//						preparedStatement.execute();
+//						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
+//						layout nextFrame = new layout();
+//						nextFrame.setVisible(true);
+//						setVisible(false);
+//					} catch (SQLException e1 ) {
+//						// TODO Auto-generated catch block
+//						e1 .printStackTrace();
+//					}
+				}	
+			}
+		});
 	}
 	
 	public ImageIcon ResizeImage(String ImagePath) {

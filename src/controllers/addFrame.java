@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 public class addFrame extends JFrame {
 
@@ -65,11 +66,12 @@ public class addFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnAddEngineer = new JButton("K\u1EF9 S\u01B0");
+		JButton btnAddEngineer = new JButton("  K\u1EF9 S\u01B0");
+		btnAddEngineer.setIcon(new ImageIcon(addFrame.class.getResource("/assets/engineer.png")));
 		btnAddEngineer.setForeground(Color.WHITE);
 		btnAddEngineer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addEnginnerFrame newframe = new addEnginnerFrame();
+				addEngineerFrame newframe = new addEngineerFrame();
 				newframe.setVisible(true);
 				setVisible(false);
 			}
@@ -83,6 +85,7 @@ public class addFrame extends JFrame {
 		contentPane.add(btnAddEngineer);
 		
 		JButton btnAddWorker = new JButton("C\u00F4ng Nh\u00E2n");
+		btnAddWorker.setIcon(new ImageIcon(addFrame.class.getResource("/assets/worker.png")));
 		btnAddWorker.setForeground(Color.WHITE);
 		btnAddWorker.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -99,6 +102,7 @@ public class addFrame extends JFrame {
 		contentPane.add(btnAddWorker);
 		
 		JButton btnAddPersonnel = new JButton("Nh\u00E2n Vi\u00EAn");
+		btnAddPersonnel.setIcon(new ImageIcon(addFrame.class.getResource("/assets/personnel.png")));
 		btnAddPersonnel.setForeground(Color.WHITE);
 		btnAddPersonnel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
