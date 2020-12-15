@@ -52,7 +52,7 @@ public class addEngineerFrame extends JFrame {
 	private JTextField txtSalary;
 	JFormattedTextField txtDOB;
 	private JTextField txtMajor;
-	JButton btnNewButton = new JButton("Chọn Ảnh (< 5MB) ");
+	JButton btnNewButton = new JButton("Chọn Ảnh");
 	JLabel lblNewLabel = new JLabel("");
 	String path = "";
 	/**
@@ -62,7 +62,7 @@ public class addEngineerFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					addPersonnelFrame frame = new addPersonnelFrame();
+					addEngineerFrame frame = new addEngineerFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -141,7 +141,7 @@ public class addEngineerFrame extends JFrame {
 		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
-		JLabel lblAddStaff = new JLabel("Thêm Kỹ Sư");
+		JLabel lblAddStaff = new JLabel("Thêm Nhân Viên");
 		lblAddStaff.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAddStaff.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		lblAddStaff.setBounds(388, 10, 331, 52);
@@ -182,6 +182,30 @@ public class addEngineerFrame extends JFrame {
 		academiclevelcomboBox.addItem("PGS-TS");
 		academiclevelcomboBox.addItem("Giáo Sư");
 		
+
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			  JFileChooser file = new JFileChooser();
+	          file.setCurrentDirectory(new File(System.getProperty("user.home")));
+	          //filter the files
+	          FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
+	          file.addChoosableFileFilter(filter);
+	          int result = file.showSaveDialog(null);
+	           //if the user click on save in Jfilechooser
+	          if(result == JFileChooser.APPROVE_OPTION){
+	              File selectedFile = file.getSelectedFile();
+	              path = selectedFile.getAbsolutePath();
+	              lblNewLabel.setIcon(ResizeImage(path));
+	          }
+
+	          else if(result == JFileChooser.CANCEL_OPTION){
+	              System.out.println("No File Select");
+	          }
+	          
+	        }
+	    });
+		
 		JButton btnAdd = new JButton("THÊM");
 		btnAdd.setBackground(Color.GREEN);
 		btnAdd.addMouseListener(new MouseAdapter() {
@@ -216,10 +240,21 @@ public class addEngineerFrame extends JFrame {
 				if(flag == true) {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_major, staff_academiclevel, staff_img)"
-							+ " VALUES ('" + staff_name + "', '" + staff_gender + "','" + staff_address + "'," + staff_salary + " , 3, " + staff_startYearofwork + ", '" + staff_DOB + "', " + staff_level + ",'" + staff_major + "', '" + staff_academiclevel + "', '" + staff_img + "')";
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+						preparedStatement.setString(1, staff_name);
+						preparedStatement.setString(2, staff_gender);
+						preparedStatement.setString(3, staff_address);
+						preparedStatement.setDouble(4, staff_salary);
+						preparedStatement.setInt(5, 3);
+						preparedStatement.setInt(6, staff_startYearofwork);
+						preparedStatement.setString(7, staff_DOB);
+						preparedStatement.setString(8, staff_level);
+						preparedStatement.setString(9, staff_major);
+						preparedStatement.setString(10, staff_academiclevel);
+						preparedStatement.setBlob(11, staff_img);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
 						layout nextFrame = new layout();
@@ -276,28 +311,6 @@ public class addEngineerFrame extends JFrame {
 		contentPane.add(lblNewLabel);
 		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setBackground(Color.BLUE);
-		
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			  JFileChooser file = new JFileChooser();
-	          file.setCurrentDirectory(new File(System.getProperty("user.home")));
-	          //filter the files
-	          FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
-	          file.addChoosableFileFilter(filter);
-	          int result = file.showSaveDialog(null);
-	           //if the user click on save in Jfilechooser
-	          if(result == JFileChooser.APPROVE_OPTION){
-	              File selectedFile = file.getSelectedFile();
-	              path = selectedFile.getAbsolutePath();
-	              lblNewLabel.setIcon(ResizeImage(path));
-	          }
-
-	          else if(result == JFileChooser.CANCEL_OPTION){
-	              System.out.println("No File Select");
-	          }
-	          
-	        }
-	    });
 		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnNewButton.setBounds(61, 743, 418, 41);
 		contentPane.add(btnNewButton);

@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.mysql.jdbc.Blob;
+
 import database.DBConnection;
 import database.ListEngineer;
 import model.Engineer;
@@ -26,6 +28,7 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -34,9 +37,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -59,8 +65,8 @@ public class editEngineerFrame extends JFrame {
 	JComboBox levelcomboBox = null;;
 	JComboBox academiclevelcomboBox = null;
 	JComboBox gendercomboBox = null;
-	JButton btnNewButton = new JButton("Chọn Ảnh (< 5MB) ");
-	JLabel lblNewLabel = new JLabel("");
+	JButton btnBrowse = new JButton("Chọn Ảnh (< 5MB) ");
+	JLabel lblstaff_img = new JLabel("");
 	String path = "";
 	int staff_id = 0;
 	int position_id = 0;
@@ -82,8 +88,10 @@ public class editEngineerFrame extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	public editEngineerFrame() {
+	public editEngineerFrame() throws SQLException, IOException {
 		staff_id = StaffSession.getInstanceId();
 		position_id = StaffSession.getInstancePositionId();
 		System.out.println("id = " + staff_id);
@@ -92,7 +100,7 @@ public class editEngineerFrame extends JFrame {
 		frameComponent();
 	}
 	
-	public void frameComponent() {
+	public void frameComponent() throws SQLException, IOException {
 		setBounds(100, 100, 1154, 848);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
@@ -196,12 +204,12 @@ public class editEngineerFrame extends JFrame {
 		academiclevelcomboBox.addItem("PGS-TS");
 		academiclevelcomboBox.addItem("Giáo Sư");
 		
-		JButton btnAdd = new JButton("CẬP NHẬT");
-		btnAdd.setBackground(Color.GREEN);
+		JButton btnEdit = new JButton("CẬP NHẬT");
+		btnEdit.setBackground(Color.GREEN);
 		
-		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnAdd.setBounds(622, 744, 418, 41);
-		contentPane.add(btnAdd);
+		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnEdit.setBounds(622, 744, 418, 41);
+		contentPane.add(btnEdit);
 		
 		JLabel lblLng = new JLabel("Lương");
 		lblLng.setForeground(Color.GRAY);
@@ -239,12 +247,12 @@ public class editEngineerFrame extends JFrame {
 		txtMajor.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtMajor);
 		
-		lblNewLabel.setBounds(61, 109, 418, 568);
-		contentPane.add(lblNewLabel);
-		btnNewButton.setForeground(Color.WHITE);
-		btnNewButton.setBackground(Color.BLUE);
+		lblstaff_img.setBounds(61, 109, 418, 568);
+		contentPane.add(lblstaff_img);
+		btnBrowse.setForeground(Color.WHITE);
+		btnBrowse.setBackground(Color.BLUE);
 		
-		btnNewButton.addActionListener(new ActionListener() {
+		btnBrowse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			  JFileChooser file = new JFileChooser();
 	          file.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -256,7 +264,7 @@ public class editEngineerFrame extends JFrame {
 	          if(result == JFileChooser.APPROVE_OPTION){
 	              File selectedFile = file.getSelectedFile();
 	              path = selectedFile.getAbsolutePath();
-	              lblNewLabel.setIcon(ResizeImage(path));
+	              lblstaff_img.setIcon(ResizeImage(path));
 	          }
 
 	          else if(result == JFileChooser.CANCEL_OPTION){
@@ -265,9 +273,9 @@ public class editEngineerFrame extends JFrame {
 	          
 	        }
 	    });
-		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnNewButton.setBounds(61, 743, 418, 41);
-		contentPane.add(btnNewButton);
+		btnBrowse.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnBrowse.setBounds(61, 743, 418, 41);
+		contentPane.add(btnBrowse);
 		
 		JLabel lblnhiDin = new JLabel("Ảnh Đại Diện");
 		lblnhiDin.setForeground(Color.GRAY);
@@ -284,8 +292,8 @@ public class editEngineerFrame extends JFrame {
 		
 		
 
-		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id WHERE staff_id = " + staff_id);
-		for (Engineer staff : enginnerList) {
+		ArrayList<Engineer> engineerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id WHERE staff_id = " + staff_id);
+		for (Engineer staff : engineerList) {
 			txtName.setText(staff.getStaff_name());
 			txtAddress.setText(staff.getStaff_address());
 			txtStartYearOfWork.setText(Integer.toString(staff.getStaff_startYearofwork()));
@@ -295,10 +303,11 @@ public class editEngineerFrame extends JFrame {
 			levelcomboBox.setSelectedItem(staff.getStaff_level());
 			gendercomboBox.setSelectedItem(staff.getStaff_gender());
 			academiclevelcomboBox.setSelectedItem(staff.getStaff_academiclevel());
+			lblstaff_img.setIcon(getImageIcon(staff.getStaff_img()));
 			
 		}
 		
-		btnAdd.addMouseListener(new MouseAdapter() {
+		btnEdit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				boolean flag = true;
@@ -350,9 +359,40 @@ public class editEngineerFrame extends JFrame {
 	public ImageIcon ResizeImage(String ImagePath) {
         ImageIcon MyImage = new ImageIcon(ImagePath);
         Image img = MyImage.getImage();
-        Image newImg = img.getScaledInstance(lblNewLabel.getWidth(), lblNewLabel.getHeight(), Image.SCALE_SMOOTH);
+        Image newImg = img.getScaledInstance(lblstaff_img.getWidth(), lblstaff_img.getHeight(), Image.SCALE_SMOOTH);
         ImageIcon image = new ImageIcon(newImg);
         return image;
     }
+	
+	public ImageIcon ResizeImage(String ImagePath, byte[] pic) {
+        ImageIcon MyImage = null;
+        if(ImagePath != null)
+        {
+           MyImage = new ImageIcon(ImagePath);
+        }else
+        {
+            MyImage = new ImageIcon(pic);
+        }
+        Image img = MyImage.getImage();
+        Image newImg = img.getScaledInstance(lblstaff_img.getWidth(), lblstaff_img.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImg);
+        return image;
+    }
+	
+	public byte[] getBytesFromImage(java.sql.Blob blob) throws SQLException, IOException{
+	    int blobLength = (int) blob.length();  
+	    byte[] bytes = blob.getBytes(1, blobLength);
+	    blob.free();
+	    return bytes;
+	}
+	
+	public ImageIcon getImageIcon(byte[] img){
+		ImageIcon image = new ImageIcon(img);
+		Image im = image.getImage();
+		Image myImg = im.getScaledInstance(lblstaff_img.getWidth(), lblstaff_img.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon newImage = new ImageIcon(myImg);
+		return newImage;
+	}
+	
 }
 

@@ -1,5 +1,7 @@
 package model;
 
+import com.mysql.jdbc.Blob;
+
 public class Staff {
 
 	private int staff_id;
@@ -11,7 +13,18 @@ public class Staff {
 	private int position_id;
 	private int staff_startYearofwork;
 	private String position_name;
+	private byte[] staff_img;
 	
+	public byte[] getStaff_img() {
+		return staff_img;
+	}
+
+
+	public void setStaff_img(byte[] bs) {
+		this.staff_img = bs;
+	}
+
+
 	public String getPosition_name() {
 		return position_name;
 	}

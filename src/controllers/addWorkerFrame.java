@@ -51,7 +51,7 @@ public class addWorkerFrame extends JFrame {
 	private JTextField txtStartYearOfWork;
 	private JTextField txtSalary;
 	JFormattedTextField txtDOB;
-	JButton btnNewButton = new JButton("Chọn Ảnh (< 5MB) ");
+	JButton btnNewButton = new JButton("Chọn Ảnh");
 	JLabel lblNewLabel = new JLabel("");
 	String path = "";
 	
@@ -163,52 +163,6 @@ public class addWorkerFrame extends JFrame {
 		levelcomboBox.addItem("3");
 		
 		JButton btnAdd = new JButton("THÊM");
-		btnAdd.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				boolean flag = true;
-				String staff_name = txtName.getText();
-				String staff_DOB = txtDOB.getText();
-				String staff_gender = gendercomboBox.getSelectedItem().toString();
-				String staff_address = txtAddress.getText();
-				String staff_level = levelcomboBox.getSelectedItem().toString();
-				double staff_salary = 0;	
-				int staff_startYearofwork = 0;
-				InputStream staff_img = null;
-				try {
-					staff_img = new FileInputStream(new File(path));
-				} catch (FileNotFoundException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}  
-				
-				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
-				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
-				
-				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_img.equals("")) {
-					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
-					flag = false;
-				}
-				
-				if(flag == true) {
-					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_img)"
-							+ " VALUES ('" + staff_name + "', '" + staff_gender + "','" + staff_address + "'," + staff_salary + " , 1, " + staff_startYearofwork + ", '" + staff_DOB + "', " + staff_level + ", '" + staff_img + "')";
-					System.out.println(sql);
-					try {
-						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-						preparedStatement.execute();
-						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
-						setVisible(false);
-					} catch (SQLException e1 ) {
-						// TODO Auto-generated catch block
-						e1 .printStackTrace();
-					}
-				}			
-			}
-		});
 		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnAdd.setBounds(541, 718, 418, 41);
 		contentPane.add(btnAdd);
@@ -270,6 +224,63 @@ public class addWorkerFrame extends JFrame {
 		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnNewButton.setBounds(61, 718, 418, 41);
 		contentPane.add(btnNewButton);
+		
+
+		btnAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean flag = true;
+				String staff_name = txtName.getText();
+				String staff_DOB = txtDOB.getText();
+				String staff_gender = gendercomboBox.getSelectedItem().toString();
+				String staff_address = txtAddress.getText();
+				String staff_level = levelcomboBox.getSelectedItem().toString();
+				double staff_salary = 0;	
+				int staff_startYearofwork = 0;
+				InputStream staff_img = null;
+				try {
+					staff_img = new FileInputStream(new File(path));
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}  
+				
+				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
+				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
+				
+				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_img.equals("")) {
+					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
+					flag = false;
+				}
+				
+				if(flag == true) {
+					Connection connection = (Connection) DBConnection.getConnection();
+					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_img)"
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+					System.out.println(sql);
+					try {
+						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+						preparedStatement.setString(1, staff_name);
+						preparedStatement.setString(2, staff_gender);
+						preparedStatement.setString(3, staff_address);
+						preparedStatement.setDouble(4, staff_salary);
+						preparedStatement.setInt(5, 2);
+						preparedStatement.setInt(6, staff_startYearofwork);
+						preparedStatement.setString(7, staff_DOB);
+						preparedStatement.setString(8, staff_level);
+						preparedStatement.setBlob(9, staff_img);
+						preparedStatement.execute();
+						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
+						layout nextFrame = new layout();
+						nextFrame.setVisible(true);
+						setVisible(false);
+					} catch (SQLException e1 ) {
+						// TODO Auto-generated catch block
+						e1 .printStackTrace();
+					}
+				}			
+			}
+		});
 		
 		JLabel lblnhiDin = new JLabel("Ảnh Đại Diện");
 		lblnhiDin.setForeground(Color.GRAY);

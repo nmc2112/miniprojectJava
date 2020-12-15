@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -197,8 +198,14 @@ public class layout extends JFrame {
 	        	   			workerFrame.setVisible(true);
 	        	   		}
 	        	   		else {
-	        	   			editEngineerFrame engineerFrame = new editEngineerFrame(); 
-	        	   			engineerFrame.setVisible(true);
+	        	   			editEngineerFrame engineerFrame;
+							try {
+								engineerFrame = new editEngineerFrame();
+		        	   			engineerFrame.setVisible(true);
+							} catch (SQLException | IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} 
 	        	   		}
 		            }
 		            else JOptionPane.showMessageDialog(contentPane, "Hãy chọn 1 người để sửa!");
