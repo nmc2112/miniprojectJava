@@ -222,17 +222,19 @@ public class addEngineerFrame extends JFrame {
 				double staff_salary = 0;	
 				int staff_startYearofwork = 0;
 				InputStream staff_img = null;
-				try {
-					staff_img = new FileInputStream(new File(path));
-				} catch (FileNotFoundException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}  
+				if(path != "") {
+					try {
+						staff_img = new FileInputStream(new File(path));
+					} catch (FileNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} 
+				} 
 				
 				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
 				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
 				
-				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_major.equals("") || staff_academiclevel.equals("") || staff_img.equals("")) {
+				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_major.equals("") || staff_academiclevel.equals("") || staff_img == null) {
 					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
 					flag = false;
 				}

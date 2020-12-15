@@ -194,7 +194,16 @@ public class layout extends JFrame {
 	        	   		System.out.println(staff_id);
 	        	   		StaffSession.getInstance(Integer.parseInt(staff_id), position_id);
 	        	   		if(position_id == 1) {
-	        	   			editWorkerFrame workerFrame = new editWorkerFrame();
+	        	   			editWorkerFrame workerFrame = null;
+							try {
+								workerFrame = new editWorkerFrame();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 	        	   			workerFrame.setVisible(true);
 	        	   		}
 	        	   		else {
@@ -318,8 +327,8 @@ public class layout extends JFrame {
 	            Graphics2D g2d = (Graphics2D) grphcs;
 	            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 	                    RenderingHints.VALUE_ANTIALIAS_ON);
-	            Color color1 = new Color(153,0,153);
-	            Color color2 = new Color(0,204,204);
+	            Color color1 = new Color(32, 136, 203);
+	            Color color2 = Color.PINK;
 	            GradientPaint gp = new GradientPaint(0,0,color1,180,getHeight(),color2);
 	            g2d.setPaint(gp);
 	            g2d.fillRect(0, 0, getWidth(), getHeight()); 

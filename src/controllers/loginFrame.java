@@ -124,6 +124,7 @@ public class loginFrame extends JFrame {
 						AdminSession.getInstance(admin.getAd_id(), admin.getRole_id());
 						layout nextframe = new layout();
 						nextframe.setVisible(true);
+						setVisible(false);
 					}
 				}
 				if(flag == false) JOptionPane.showMessageDialog(contentPane, "Tên đăng nhập hoặc mật khẩu không đúng!");

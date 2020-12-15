@@ -65,7 +65,7 @@ public class editEngineerFrame extends JFrame {
 	JComboBox levelcomboBox = null;;
 	JComboBox academiclevelcomboBox = null;
 	JComboBox gendercomboBox = null;
-	JButton btnBrowse = new JButton("Chọn Ảnh (< 5MB) ");
+	JButton btnBrowse = new JButton("Chọn Ảnh");
 	JLabel lblstaff_img = new JLabel("");
 	String path = "";
 	int staff_id = 0;
@@ -303,7 +303,7 @@ public class editEngineerFrame extends JFrame {
 			levelcomboBox.setSelectedItem(staff.getStaff_level());
 			gendercomboBox.setSelectedItem(staff.getStaff_gender());
 			academiclevelcomboBox.setSelectedItem(staff.getStaff_academiclevel());
-			lblstaff_img.setIcon(getImageIcon(staff.getStaff_img()));
+			if(staff.getStaff_img() != null) lblstaff_img.setIcon(getImageIcon(staff.getStaff_img()));
 			
 		}
 		
@@ -311,6 +311,7 @@ public class editEngineerFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				boolean flag = true;
+				boolean imgStatus = true;
 				String staff_name = txtName.getText();
 				String staff_DOB = txtDOB.getText();
 				String staff_gender = gendercomboBox.getSelectedItem().toString();
@@ -320,38 +321,80 @@ public class editEngineerFrame extends JFrame {
 				String staff_academiclevel = academiclevelcomboBox.getSelectedItem().toString();
 				double staff_salary = 0;	
 				int staff_startYearofwork = 0;
-//				InputStream staff_img = null;
-//				try {
-//					staff_img = new FileInputStream(new File(path));
-//				} catch (FileNotFoundException e2) {
-//					// TODO Auto-generated catch block
-//					e2.printStackTrace();
-//				}  
-				
 				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
 				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
 				
-//				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_major.equals("") || staff_academiclevel.equals("") || staff_img.equals("")) {
-//					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
-//					flag = false;
-//				}
-				
-				if(flag == true) {
-					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "UPDATE tblstaffs SET staff_name = '" + staff_name + "', staff_DOB = '"+ staff_DOB + "', staff_gender = '" + staff_gender + "', staff_address = '" + staff_address + "', staff_salary = " + staff_salary + ", staff_major = '"+ staff_major + "', staff_level = " + staff_level + ", staff_DOB = '" + staff_DOB + "', staff_startYearofwork = " +staff_startYearofwork + "', staff_academiclevel = '" + staff_academiclevel + "' WHERE staff_id = " + staff_id ;
-					System.out.println(sql);
-//					try {
-//						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-//						preparedStatement.execute();
-//						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
-//						layout nextFrame = new layout();
-//						nextFrame.setVisible(true);
-//						setVisible(false);
-//					} catch (SQLException e1 ) {
-//						// TODO Auto-generated catch block
-//						e1 .printStackTrace();
-//					}
+				InputStream staff_img = null;				
+				if(path != "") {
+					try {
+						staff_img = new FileInputStream(new File(path));
+					} catch (FileNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					imgStatus = true;
 				}	
+				else imgStatus = false;
+				
+				
+				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_major.equals("") || staff_academiclevel.equals("")) {
+					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
+					flag = false;
+				}
+				
+				if(flag == true && imgStatus == true) {
+					Connection connection = (Connection) DBConnection.getConnection();
+					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_major = ?, staff_level = ?, staff_startYearofwork = ?, staff_academiclevel = ?,  staff_img = ? WHERE staff_id = ?" ;
+					System.out.println(sql);
+					try {
+						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+						preparedStatement.setString(1, staff_name);
+						preparedStatement.setString(2, staff_DOB);
+						preparedStatement.setString(3, staff_gender);
+						preparedStatement.setString(4, staff_address);
+						preparedStatement.setDouble(5, staff_salary);
+						preparedStatement.setString(6, staff_major);
+						preparedStatement.setString(7, staff_level);
+						preparedStatement.setInt(8, staff_startYearofwork);
+						preparedStatement.setString(9, staff_academiclevel);
+						preparedStatement.setBlob(10, staff_img);
+						preparedStatement.setInt(11, staff_id);
+						preparedStatement.execute();
+						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
+						layout nextFrame = new layout();
+						nextFrame.setVisible(true);
+						setVisible(false);
+					} catch (SQLException e1 ) {
+						// TODO Auto-generated catch block
+						e1 .printStackTrace();
+					}
+				}	
+				if(flag == true && imgStatus == false) {
+					Connection connection = (Connection) DBConnection.getConnection();
+					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_major = ?, staff_level = ?, staff_startYearofwork = ?, staff_academiclevel = ? WHERE staff_id = ?" ;
+					System.out.println(sql);
+					try {
+						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+						preparedStatement.setString(1, staff_name);
+						preparedStatement.setString(2, staff_DOB);
+						preparedStatement.setString(3, staff_gender);
+						preparedStatement.setString(4, staff_address);
+						preparedStatement.setDouble(5, staff_salary);
+						preparedStatement.setString(6, staff_major);
+						preparedStatement.setString(7, staff_level);
+						preparedStatement.setInt(8, staff_startYearofwork);
+						preparedStatement.setString(9, staff_academiclevel);
+						preparedStatement.setInt(10, staff_id);
+						preparedStatement.execute();
+						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
+						layout nextFrame = new layout();
+						nextFrame.setVisible(true);
+						setVisible(false);
+					} catch (SQLException e1 ) {
+						// TODO Auto-generated catch block
+						e1 .printStackTrace();
+					}
+				}
 			}
 		});
 	}

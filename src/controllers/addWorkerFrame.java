@@ -165,6 +165,7 @@ public class addWorkerFrame extends JFrame {
 		JButton btnAdd = new JButton("THÊM");
 		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnAdd.setBounds(541, 718, 418, 41);
+		btnAdd.setBackground(Color.GREEN);
 		contentPane.add(btnAdd);
 		
 		JLabel lblLng = new JLabel("Lương");
@@ -223,6 +224,8 @@ public class addWorkerFrame extends JFrame {
 	    });
 		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnNewButton.setBounds(61, 718, 418, 41);
+		btnNewButton.setForeground(Color.WHITE);
+		btnNewButton.setBackground(Color.BLUE);
 		contentPane.add(btnNewButton);
 		
 
@@ -238,17 +241,18 @@ public class addWorkerFrame extends JFrame {
 				double staff_salary = 0;	
 				int staff_startYearofwork = 0;
 				InputStream staff_img = null;
-				try {
-					staff_img = new FileInputStream(new File(path));
-				} catch (FileNotFoundException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}  
-				
+				if(path != "") {
+					try {
+						staff_img = new FileInputStream(new File(path));
+					} catch (FileNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} 
+				}
 				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
 				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
 				
-				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_img.equals("")) {
+				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_img == null) {
 					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
 					flag = false;
 				}
@@ -256,7 +260,7 @@ public class addWorkerFrame extends JFrame {
 				if(flag == true) {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_img)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+							+ " VALUES (?,?,?,?,?,?,?,?,?)";
 					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -264,7 +268,7 @@ public class addWorkerFrame extends JFrame {
 						preparedStatement.setString(2, staff_gender);
 						preparedStatement.setString(3, staff_address);
 						preparedStatement.setDouble(4, staff_salary);
-						preparedStatement.setInt(5, 2);
+						preparedStatement.setInt(5, 1);
 						preparedStatement.setInt(6, staff_startYearofwork);
 						preparedStatement.setString(7, staff_DOB);
 						preparedStatement.setString(8, staff_level);
