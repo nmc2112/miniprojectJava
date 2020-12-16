@@ -123,6 +123,10 @@ public class layout extends JFrame {
 		panelAccount.setBackground(Color.WHITE);
 		layeredPane.add(panelAccount, "accountForm");
 		
+		JPanel panelDivision = new JPanel();
+		panelDivision.setBackground(Color.WHITE);
+		layeredPane.add(panelDivision, "name_288141872318900");
+		
 		JButton btnPanelTable = new JButton("Danh Sách Nhân Viên");
 		btnPanelTable.setForeground(Color.WHITE);
 		btnPanelTable.setIcon(new ImageIcon(layout.class.getResource("/assets/employee-1.png")));
@@ -135,6 +139,8 @@ public class layout extends JFrame {
 		});
 
 		new listStaffFrame().listStaffFrame(panelTable, role_id, ad_id);
+		
+		
 		btnPanelTable.setBorder(new MatteBorder(0,0,2,0,Color.WHITE));
 		btnPanelTable.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		btnPanelTable.setBounds(10, 165, 240, 53);
@@ -165,10 +171,10 @@ public class layout extends JFrame {
 		if(role_id == 1) {
 			btnDanhSchQun.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					switchPanel(panelAccount);
+					switchPanel(panelDivision);
 				}
 			});
-			new listManagerFrame().listManagerFrame(panelAccount, role_id, ad_id);
+			new listManagerFrame().listManagerFrame(panelDivision, role_id, ad_id);
 		}
 		else {
 			btnDanhSchQun.addActionListener(new ActionListener() {
@@ -185,6 +191,31 @@ public class layout extends JFrame {
 		btnDanhSchQun.setBackground(new Color(250, 250, 250, 20));
 		btnDanhSchQun.setBounds(10, 235, 240, 53);
 		panel.add(btnDanhSchQun);
+		
+		JButton btnDanhSchPhng = new JButton("Danh Sách Phòng Ban");
+		if(role_id == 1) {
+			btnDanhSchPhng.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					switchPanel(panelAccount);
+				}
+			});
+			new listDivisionFrame().listDivisionFrame(panelAccount, role_id, ad_id);
+		}
+		else {
+			btnDanhSchPhng.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
+				}
+			});
+		}
+		btnDanhSchPhng.setIcon(new ImageIcon(layout.class.getResource("/assets/office.png")));
+		btnDanhSchPhng.setOpaque(false);
+		btnDanhSchPhng.setForeground(Color.WHITE);
+		btnDanhSchPhng.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		btnDanhSchPhng.setBorder(new MatteBorder(0,0,2,0,Color.WHITE));
+		btnDanhSchPhng.setBackground(new Color(250, 250, 250, 20));
+		btnDanhSchPhng.setBounds(10, 306, 240, 53);
+		panel.add(btnDanhSchPhng);
 		
 		JButton btnNewButton = new JButton("Đăng Xuất");
 		btnNewButton.setBounds(1370, 10, 147, 40);
