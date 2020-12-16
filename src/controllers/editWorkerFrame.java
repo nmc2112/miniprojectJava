@@ -12,7 +12,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.mysql.jdbc.Blob;
 
 import database.DBConnection;
+import database.ListDivision;
 import database.ListEngineer;
+import model.Division;
 import model.Engineer;
 import model.StaffSession;
 
@@ -52,6 +54,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.UIManager;
 
 public class editWorkerFrame extends JFrame {
 
@@ -101,7 +104,7 @@ public class editWorkerFrame extends JFrame {
 	}
 	
 	public void frameComponent() throws SQLException, IOException {
-		setBounds(100, 100, 1154, 705);
+		setBounds(100, 100, 1154, 779);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -166,7 +169,7 @@ public class editWorkerFrame extends JFrame {
 		JLabel lblAddStaff = new JLabel("Sửa Thông Tin Công Nhân");
 		lblAddStaff.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAddStaff.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		lblAddStaff.setBounds(411, 10, 280, 52);
+		lblAddStaff.setBounds(411, 0, 280, 52);
 		contentPane.add(lblAddStaff);
 		
 		JLabel lblBc = new JLabel("Bậc ");
@@ -186,7 +189,7 @@ public class editWorkerFrame extends JFrame {
 		btnEdit.setBackground(Color.GREEN);
 		
 		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnEdit.setBounds(622, 596, 418, 41);
+		btnEdit.setBounds(622, 680, 418, 41);
 		contentPane.add(btnEdit);
 		
 		JLabel lblLng = new JLabel("Lương");
@@ -246,7 +249,7 @@ public class editWorkerFrame extends JFrame {
 	        }
 	    });
 		btnBrowse.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnBrowse.setBounds(61, 596, 418, 41);
+		btnBrowse.setBounds(61, 680, 418, 41);
 		contentPane.add(btnBrowse);
 		
 		JLabel lblnhiDin = new JLabel("Ảnh Đại Diện");
@@ -262,9 +265,21 @@ public class editWorkerFrame extends JFrame {
 //		else lblPositionName.setText("Kỹ Sư");
 //		contentPane.add(lblPositionName);
 		
+		JComboBox divisionCombobox = new JComboBox();
+		divisionCombobox.setBounds(622, 629, 418, 41);
+		ArrayList<Division> divisionList = new ListDivision().list("*"," WHERE 1=1");
+		for (Division division : divisionList) {
+			divisionCombobox.addItem(division.getDivision_name());
+		}
+		contentPane.add(divisionCombobox);
 		
+		JLabel lblPhngBan = new JLabel("Phòng Ban");
+		lblPhngBan.setForeground(Color.GRAY);
+		lblPhngBan.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblPhngBan.setBounds(622, 585, 115, 34);
+		contentPane.add(lblPhngBan);
 
-		ArrayList<Engineer> engineerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id WHERE staff_id = " + staff_id);
+		ArrayList<Engineer> engineerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id  WHERE staff_id = " + staff_id);
 		for (Engineer staff : engineerList) {
 			txtName.setText(staff.getStaff_name());
 			txtAddress.setText(staff.getStaff_address());
@@ -274,7 +289,7 @@ public class editWorkerFrame extends JFrame {
 			levelcomboBox.setSelectedItem(staff.getStaff_level());
 			gendercomboBox.setSelectedItem(staff.getStaff_gender());
 			if(staff.getStaff_img() != null) lblstaff_img.setIcon(getImageIcon(staff.getStaff_img()));
-			
+			divisionCombobox.setSelectedItem(staff.getDivision_name());
 		}
 		
 		btnEdit.addMouseListener(new MouseAdapter() {
@@ -291,7 +306,11 @@ public class editWorkerFrame extends JFrame {
 				int staff_startYearofwork = 0;
 				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
 				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
-				
+				int division_id = 0;
+				ArrayList<Division> divisionList = new ListDivision().list("*"," WHERE division_name = '" + divisionCombobox.getSelectedItem().toString() + "'");
+				for (Division division : divisionList) {
+					division_id = division.getDivision_id();
+				}
 				InputStream staff_img = null;				
 				if(path != "") {
 					try {
@@ -305,14 +324,14 @@ public class editWorkerFrame extends JFrame {
 				else imgStatus = false;
 				
 				
-				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0) {
+				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || division_id == 0) {
 					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
 					flag = false;
 				}
 				
 				if(flag == true && imgStatus == true) {
 					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_major = ?, staff_level = ?, staff_startYearofwork = ?, staff_academiclevel = ?,  staff_img = ? WHERE staff_id = ?" ;
+					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_major = ?, staff_level = ?, staff_startYearofwork = ?, staff_academiclevel = ?,  staff_img = ?, division_id = ? WHERE staff_id = ?" ;
 					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -324,7 +343,9 @@ public class editWorkerFrame extends JFrame {
 						preparedStatement.setString(6, staff_level);
 						preparedStatement.setInt(7, staff_startYearofwork);
 						preparedStatement.setBlob(8, staff_img);
-						preparedStatement.setInt(9, staff_id);
+						preparedStatement.setInt(9, division_id);
+						preparedStatement.setInt(10, staff_id);
+						System.out.println(sql);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
 						layout nextFrame = new layout();
@@ -337,8 +358,8 @@ public class editWorkerFrame extends JFrame {
 				}	
 				if(flag == true && imgStatus == false) {
 					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_level = ?, staff_startYearofwork = ? WHERE staff_id = ?" ;
-					System.out.println(sql);
+					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_level = ?, staff_startYearofwork = ?, division_id = ? WHERE staff_id = ?" ;
+					
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.setString(1, staff_name);
@@ -348,7 +369,9 @@ public class editWorkerFrame extends JFrame {
 						preparedStatement.setDouble(5, staff_salary);
 						preparedStatement.setString(6, staff_level);
 						preparedStatement.setInt(7, staff_startYearofwork);
-						preparedStatement.setInt(8, staff_id);
+						preparedStatement.setInt(8, division_id);
+						preparedStatement.setInt(9, staff_id);
+						System.out.println(sql);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
 						layout nextFrame = new layout();

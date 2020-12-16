@@ -10,6 +10,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import database.DBConnection;
+import database.ListDivision;
+import model.Division;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -41,6 +43,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class addWorkerFrame extends JFrame {
@@ -79,7 +82,7 @@ public class addWorkerFrame extends JFrame {
 	}
 	
 	public void frameComponent() {
-		setBounds(100, 100, 1077, 821);
+		setBounds(100, 100, 1077, 883);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -133,12 +136,12 @@ public class addWorkerFrame extends JFrame {
 		JLabel lblStartYear = new JLabel("Năm Bắt Đầu ");
 		lblStartYear.setForeground(Color.GRAY);
 		lblStartYear.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblStartYear.setBounds(541, 325, 115, 34);
+		lblStartYear.setBounds(541, 686, 115, 34);
 		contentPane.add(lblStartYear);
 		
 		txtStartYearOfWork = new JTextField();
 		txtStartYearOfWork.setColumns(10);
-		txtStartYearOfWork.setBounds(541, 369, 418, 35);
+		txtStartYearOfWork.setBounds(541, 730, 418, 35);
 		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
@@ -164,7 +167,7 @@ public class addWorkerFrame extends JFrame {
 		
 		JButton btnAdd = new JButton("THÊM");
 		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnAdd.setBounds(541, 718, 418, 41);
+		btnAdd.setBounds(541, 775, 418, 41);
 		btnAdd.setBackground(Color.GREEN);
 		contentPane.add(btnAdd);
 		
@@ -223,12 +226,35 @@ public class addWorkerFrame extends JFrame {
 	        }
 	    });
 		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnNewButton.setBounds(61, 718, 418, 41);
+		btnNewButton.setBounds(61, 775, 418, 41);
 		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setBackground(Color.BLUE);
 		contentPane.add(btnNewButton);
 		
 
+		
+		
+		JLabel lblnhiDin = new JLabel("Ảnh Đại Diện");
+		lblnhiDin.setForeground(Color.GRAY);
+		lblnhiDin.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblnhiDin.setBounds(61, 74, 418, 25);
+		contentPane.add(lblnhiDin);
+		
+		JLabel lblPhngBan = new JLabel("Phòng, Ban");
+		lblPhngBan.setForeground(Color.GRAY);
+		lblPhngBan.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		lblPhngBan.setBounds(541, 319, 115, 34);
+		contentPane.add(lblPhngBan);
+		
+		JComboBox divisionCombobox = new JComboBox();
+		divisionCombobox.setBackground(Color.WHITE);
+		divisionCombobox.setBounds(541, 363, 418, 41);
+		ArrayList<Division> divisionList = new ListDivision().list("*"," WHERE 1=1");
+		for (Division division : divisionList) {
+			divisionCombobox.addItem(division.getDivision_name());
+		}
+		contentPane.add(divisionCombobox);
+		
 		btnAdd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -238,6 +264,11 @@ public class addWorkerFrame extends JFrame {
 				String staff_gender = gendercomboBox.getSelectedItem().toString();
 				String staff_address = txtAddress.getText();
 				String staff_level = levelcomboBox.getSelectedItem().toString();
+				int division_id = 0;
+				ArrayList<Division> divisionList = new ListDivision().list("*"," WHERE division_name = '" + divisionCombobox.getSelectedItem().toString() + "'");
+				for (Division division : divisionList) {
+					division_id = division.getDivision_id();
+				}
 				double staff_salary = 0;	
 				int staff_startYearofwork = 0;
 				InputStream staff_img = null;
@@ -252,15 +283,15 @@ public class addWorkerFrame extends JFrame {
 				if(!txtStartYearOfWork.getText().equals("")) staff_startYearofwork = Integer.parseInt(txtStartYearOfWork.getText()); 
 				if(!txtSalary.getText().equals("")) staff_salary = Double.parseDouble(txtSalary.getText()); 
 				
-				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_img == null) {
+				if(staff_name.equals("") || staff_DOB.equals("") || staff_gender.equals("") || staff_address.equals("") || staff_level.equals("") || staff_startYearofwork == 0 || staff_salary == 0 || staff_img == null || division_id == 0) {
 					JOptionPane.showMessageDialog(contentPane, "Hãy điền hết các thông tin!");
 					flag = false;
 				}
 				
 				if(flag == true) {
 					Connection connection = (Connection) DBConnection.getConnection();
-					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_img)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?)";
+					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_img, division_id)"
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?)";
 					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -273,6 +304,7 @@ public class addWorkerFrame extends JFrame {
 						preparedStatement.setString(7, staff_DOB);
 						preparedStatement.setString(8, staff_level);
 						preparedStatement.setBlob(9, staff_img);
+						preparedStatement.setInt(10, division_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
 						layout nextFrame = new layout();
@@ -285,12 +317,6 @@ public class addWorkerFrame extends JFrame {
 				}			
 			}
 		});
-		
-		JLabel lblnhiDin = new JLabel("Ảnh Đại Diện");
-		lblnhiDin.setForeground(Color.GRAY);
-		lblnhiDin.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblnhiDin.setBounds(61, 74, 418, 25);
-		contentPane.add(lblnhiDin);
 	}
 	
 	public ImageIcon ResizeImage(String ImagePath) {

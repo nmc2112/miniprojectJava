@@ -67,6 +67,12 @@ public class ListEngineer extends DBConnection{
                         case "staff_img":
                         	engineer.setStaff_img(resultSet.getBytes(i));
                             break;
+                        case "division_id":
+                        	engineer.setDivision_id(resultSet.getInt(i));
+                            break;
+                        case "division_name":
+                        	engineer.setDivision_name(resultSet.getString(i));
+                            break;
                         default:
                             break;
                     }

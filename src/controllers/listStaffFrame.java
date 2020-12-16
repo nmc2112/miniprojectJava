@@ -86,21 +86,12 @@ public class listStaffFrame {
 		btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		btnAdd.setBounds(47, 111, 113, 33);
 		panelTable.add(btnAdd);
-		if(role_id == 1) {
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					addFrame newframe = new addFrame();
-					newframe.setVisible(true);
-				}
-			});
-		}
-		else{
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
-				}
-			});
-		}
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addFrame newframe = new addFrame();
+				newframe.setVisible(true);
+			}
+		});
 		
 		
 		JButton btnEdit = new JButton();

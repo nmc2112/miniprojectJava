@@ -16,7 +16,7 @@ public class ListDivision extends DBConnection{
 
     }
     public ArrayList<Division> list(String columns, String condition){
-        String sql = " SELECT " + columns + " FROM tblDivision a " + condition;
+        String sql = " SELECT " + columns + " FROM tbldivision d " + condition;
         int countColumn = 1;
         try {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -28,10 +28,10 @@ public class ListDivision extends DBConnection{
                 for (int i = 1; i <= countColumn; i++) {
                     columnName[i] = resultSet.getMetaData().getColumnName(i);
                     switch (columnName[i]) {
-                        case "ad_id":
+                        case "division_id":
                         	division.setDivision_id(resultSet.getInt(i));
                             break;
-                        case "ad_username":
+                        case "division_name":
                         	division.setDivision_name(resultSet.getString(i));
                             break;
                         default:
