@@ -27,6 +27,7 @@ import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import database.DBConnection;
@@ -41,6 +42,7 @@ public class listStaffFrame {
 	private JTextField txtGender;
 	JDialog dialog = new JDialog();
 	private JTextField txtSearch;
+	editEngineerFrame engineerFrame;
 	DefaultTableModel model = new DefaultTableModel(); 
 	JLayeredPane layeredPane = new JLayeredPane();
 	
@@ -64,10 +66,30 @@ public class listStaffFrame {
         model.addColumn("Ngày Sinh");
         model.addColumn("Giới Tính");
         model.addColumn("Địa Chỉ");
-        model.addColumn("Lương");
+        model.addColumn("Phòng");
         model.addColumn("Vị Trí"); 
         model.addColumn("Năm Bắt Đầu");
         table.setRowSelectionAllowed(true);
+        
+        int[] columnsWidth = {
+                (int) (scrollPane.getWidth() * 0.05), 
+                (int) (scrollPane.getWidth() * 0.15), 
+                (int) (scrollPane.getWidth() * 0.1), 
+                (int) (scrollPane.getWidth() * 0.1), 
+                (int) (scrollPane.getWidth() * 0.15), 
+                (int) (scrollPane.getWidth() * 0.25), 
+                (int) (scrollPane.getWidth() * 0.1), 
+                (int) (scrollPane.getWidth() * 0.1)
+        };
+            // Configures table's column width.
+        int i = 0;
+        for (int width : columnsWidth) {
+            TableColumn column = table.getColumnModel().getColumn(i++);
+            column.setMinWidth(width);
+            column.setMaxWidth(width);
+            column.setPreferredWidth(width);
+        }
+        
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         refreshTableStaff(model);
 		
@@ -130,7 +152,6 @@ public class listStaffFrame {
 	        	   			workerFrame.setVisible(true);
 	        	   		}
 	        	   		else {
-	        	   			editEngineerFrame engineerFrame;
 							try {
 								engineerFrame = new editEngineerFrame();
 		        	   			engineerFrame.setVisible(true);
@@ -228,9 +249,9 @@ public class listStaffFrame {
 	
 	public void refreshTableStaff(DefaultTableModel model) {
 		model.setRowCount(0);
-		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id ORDER BY staff_id");
+		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
 		for (Engineer staff : enginnerList) {
-			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(), staff.getDivision_name() ,staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
 	}

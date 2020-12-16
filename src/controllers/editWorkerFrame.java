@@ -104,7 +104,7 @@ public class editWorkerFrame extends JFrame {
 	}
 	
 	public void frameComponent() throws SQLException, IOException {
-		setBounds(100, 100, 1154, 779);
+		setBounds(100, 100, 1125, 779);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -115,29 +115,29 @@ public class editWorkerFrame extends JFrame {
 		JLabel lblName = new JLabel("Tên");
 		lblName.setForeground(Color.GRAY);
 		lblName.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblName.setBounds(622, 51, 115, 34);
+		lblName.setBounds(62, 341, 115, 34);
 		contentPane.add(lblName);
 		
 		txtName = new JTextField();
 		txtName.setColumns(10);
-		txtName.setBounds(621, 77, 420, 35);
+		txtName.setBounds(61, 367, 420, 35);
 		contentPane.add(txtName);
 		txtName.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		
 		JLabel lblDOB = new JLabel("Ngày Sinh");
 		lblDOB.setForeground(Color.GRAY);
 		lblDOB.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblDOB.setBounds(622, 190, 115, 34);
+		lblDOB.setBounds(62, 480, 115, 34);
 		contentPane.add(lblDOB);
 		
 		JLabel lblGender = new JLabel("Giới Tính");
 		lblGender.setForeground(Color.GRAY);
 		lblGender.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblGender.setBounds(622, 341, 115, 34);
+		lblGender.setBounds(622, 333, 115, 34);
 		contentPane.add(lblGender);
 		
 		gendercomboBox = new JComboBox();
-		gendercomboBox.setBounds(622, 369, 419, 41);
+		gendercomboBox.setBounds(622, 361, 419, 41);
 		contentPane.add(gendercomboBox);
 		gendercomboBox.addItem("Nam");
 		gendercomboBox.addItem("Nữ");
@@ -145,24 +145,24 @@ public class editWorkerFrame extends JFrame {
 		JLabel lblName_2_1 = new JLabel("Địa Chỉ");
 		lblName_2_1.setForeground(Color.GRAY);
 		lblName_2_1.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblName_2_1.setBounds(622, 122, 115, 34);
+		lblName_2_1.setBounds(62, 412, 115, 34);
 		contentPane.add(lblName_2_1);
 		
 		txtAddress = new JTextField();
 		txtAddress.setColumns(10);
-		txtAddress.setBounds(622, 148, 419, 35);
+		txtAddress.setBounds(62, 438, 419, 35);
 		contentPane.add(txtAddress);
 		txtAddress.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		
 		JLabel lblStartYear = new JLabel("Năm Bắt Đầu ");
 		lblStartYear.setForeground(Color.GRAY);
 		lblStartYear.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblStartYear.setBounds(622, 265, 115, 34);
+		lblStartYear.setBounds(62, 570, 115, 34);
 		contentPane.add(lblStartYear);
 		
 		txtStartYearOfWork = new JTextField();
 		txtStartYearOfWork.setColumns(10);
-		txtStartYearOfWork.setBounds(622, 298, 419, 35);
+		txtStartYearOfWork.setBounds(62, 603, 419, 35);
 		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
@@ -175,11 +175,11 @@ public class editWorkerFrame extends JFrame {
 		JLabel lblBc = new JLabel("Bậc ");
 		lblBc.setForeground(Color.GRAY);
 		lblBc.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblBc.setBounds(622, 420, 115, 34);
+		lblBc.setBounds(622, 403, 115, 34);
 		contentPane.add(lblBc);
 		
 		JComboBox levelcomboBox = new JComboBox();
-		levelcomboBox.setBounds(622, 449, 419, 41);
+		levelcomboBox.setBounds(622, 432, 419, 41);
 		contentPane.add(levelcomboBox);
 		levelcomboBox.addItem("1");
 		levelcomboBox.addItem("2");
@@ -189,18 +189,18 @@ public class editWorkerFrame extends JFrame {
 		btnEdit.setBackground(Color.GREEN);
 		
 		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnEdit.setBounds(622, 680, 418, 41);
+		btnEdit.setBounds(391, 680, 277, 41);
 		contentPane.add(btnEdit);
 		
 		JLabel lblLng = new JLabel("Lương");
 		lblLng.setForeground(Color.GRAY);
 		lblLng.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblLng.setBounds(622, 510, 115, 34);
+		lblLng.setBounds(622, 477, 115, 34);
 		contentPane.add(lblLng);
 		
 		txtSalary = new JTextField();
 		txtSalary.setColumns(10);
-		txtSalary.setBounds(622, 543, 419, 35);
+		txtSalary.setBounds(622, 510, 419, 35);
 		txtSalary.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtSalary);
 		
@@ -219,10 +219,10 @@ public class editWorkerFrame extends JFrame {
 		      }
 		    }
 		  });
-		txtDOB.setBounds(622, 221, 419, 34);
+		txtDOB.setBounds(62, 511, 419, 34);
 		contentPane.add(txtDOB);
 		
-		lblstaff_img.setBounds(61, 109, 418, 469);
+		lblstaff_img.setBounds(61, 109, 161, 162);
 		contentPane.add(lblstaff_img);
 		btnBrowse.setForeground(Color.WHITE);
 		btnBrowse.setBackground(Color.BLUE);
@@ -249,24 +249,17 @@ public class editWorkerFrame extends JFrame {
 	        }
 	    });
 		btnBrowse.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnBrowse.setBounds(61, 680, 418, 41);
+		btnBrowse.setBounds(232, 232, 109, 35);
 		contentPane.add(btnBrowse);
 		
 		JLabel lblnhiDin = new JLabel("Ảnh Đại Diện");
 		lblnhiDin.setForeground(Color.GRAY);
 		lblnhiDin.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblnhiDin.setBounds(76, 56, 418, 25);
+		lblnhiDin.setBounds(62, 62, 418, 25);
 		contentPane.add(lblnhiDin);
 		
-//		JLabel lblPositionName = new JLabel();
-//		lblPositionName.setFont(new Font("Segoe UI", Font.BOLD, 20));
-//		lblPositionName.setBounds(579, 19, 143, 34);
-//		if(position_id == 2) lblPositionName.setText("Nhân Viên");
-//		else lblPositionName.setText("Kỹ Sư");
-//		contentPane.add(lblPositionName);
-		
 		JComboBox divisionCombobox = new JComboBox();
-		divisionCombobox.setBounds(622, 629, 418, 41);
+		divisionCombobox.setBounds(623, 597, 418, 41);
 		ArrayList<Division> divisionList = new ListDivision().list("*"," WHERE 1=1");
 		for (Division division : divisionList) {
 			divisionCombobox.addItem(division.getDivision_name());
@@ -276,7 +269,7 @@ public class editWorkerFrame extends JFrame {
 		JLabel lblPhngBan = new JLabel("Phòng Ban");
 		lblPhngBan.setForeground(Color.GRAY);
 		lblPhngBan.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblPhngBan.setBounds(622, 585, 115, 34);
+		lblPhngBan.setBounds(623, 553, 115, 34);
 		contentPane.add(lblPhngBan);
 
 		ArrayList<Engineer> engineerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id  WHERE staff_id = " + staff_id);

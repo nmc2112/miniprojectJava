@@ -31,6 +31,7 @@ import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import database.DBConnection;
@@ -75,7 +76,20 @@ public class listManagerFrame {
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         refreshTableManager(model);
 		
-		
+        int[] columnsWidth = {
+                (int) (scrollPane.getWidth() * 0.1), 
+                (int) (scrollPane.getWidth() * 0.3), 
+                (int) (scrollPane.getWidth() * 0.3), 
+                (int) (scrollPane.getWidth() * 0.3), 
+        };
+            // Configures table's column width.
+        int i = 0;
+        for (int width : columnsWidth) {
+            TableColumn column = table.getColumnModel().getColumn(i++);
+            column.setMinWidth(width);
+            column.setMaxWidth(width);
+            column.setPreferredWidth(width);
+        }
 		detailForm.setCellsAlignment(table,SwingConstants.CENTER);
 	
 		scrollPane.setViewportView(table);

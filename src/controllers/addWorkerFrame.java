@@ -93,30 +93,30 @@ public class addWorkerFrame extends JFrame {
 		JLabel lblName = new JLabel("Tên");
 		lblName.setForeground(Color.GRAY);
 		lblName.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblName.setBounds(541, 74, 418, 25);
+		lblName.setBounds(61, 363, 418, 25);
 		contentPane.add(lblName);
 		
 		txtName = new JTextField();
 		txtName.setColumns(10);
 		txtName.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
-		txtName.setBounds(541, 109, 418, 35);
+		txtName.setBounds(61, 398, 418, 35);
 		contentPane.add(txtName);
 		
 		JLabel lblDOB = new JLabel("Ngày Sinh");
 		lblDOB.setForeground(Color.GRAY);
 		lblDOB.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblDOB.setBounds(541, 231, 115, 34);
+		lblDOB.setBounds(61, 533, 115, 34);
 		contentPane.add(lblDOB);
 		
 		JLabel lblGender = new JLabel("Giới Tính");
 		lblGender.setForeground(Color.GRAY);
 		lblGender.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblGender.setBounds(541, 414, 115, 34);
+		lblGender.setBounds(541, 443, 115, 34);
 		contentPane.add(lblGender);
 		
 		JComboBox gendercomboBox = new JComboBox();
 		gendercomboBox.setBackground(Color.WHITE);
-		gendercomboBox.setBounds(541, 458, 418, 41);
+		gendercomboBox.setBounds(541, 471, 418, 41);
 		contentPane.add(gendercomboBox);
 		gendercomboBox.addItem("Nam");
 		gendercomboBox.addItem("Nữ");
@@ -124,24 +124,24 @@ public class addWorkerFrame extends JFrame {
 		JLabel lblName_2_1 = new JLabel("Địa Chỉ");
 		lblName_2_1.setForeground(Color.GRAY);
 		lblName_2_1.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblName_2_1.setBounds(541, 154, 115, 34);
+		lblName_2_1.setBounds(61, 443, 115, 34);
 		contentPane.add(lblName_2_1);
 		
 		txtAddress = new JTextField();
 		txtAddress.setColumns(10);
-		txtAddress.setBounds(541, 186, 418, 35);
+		txtAddress.setBounds(61, 475, 418, 35);
 		txtAddress.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtAddress);
 		
 		JLabel lblStartYear = new JLabel("Năm Bắt Đầu ");
 		lblStartYear.setForeground(Color.GRAY);
 		lblStartYear.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblStartYear.setBounds(541, 686, 115, 34);
+		lblStartYear.setBounds(541, 630, 115, 34);
 		contentPane.add(lblStartYear);
 		
 		txtStartYearOfWork = new JTextField();
 		txtStartYearOfWork.setColumns(10);
-		txtStartYearOfWork.setBounds(541, 730, 418, 35);
+		txtStartYearOfWork.setBounds(541, 669, 418, 35);
 		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
@@ -154,12 +154,12 @@ public class addWorkerFrame extends JFrame {
 		JLabel lblBc = new JLabel("Bậc ");
 		lblBc.setForeground(Color.GRAY);
 		lblBc.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblBc.setBounds(541, 509, 115, 34);
+		lblBc.setBounds(541, 533, 115, 34);
 		contentPane.add(lblBc);
 		
 		JComboBox levelcomboBox = new JComboBox();
 		levelcomboBox.setBackground(Color.WHITE);
-		levelcomboBox.setBounds(541, 553, 418, 41);
+		levelcomboBox.setBounds(541, 559, 418, 41);
 		contentPane.add(levelcomboBox);
 		levelcomboBox.addItem("1");
 		levelcomboBox.addItem("2");
@@ -174,12 +174,12 @@ public class addWorkerFrame extends JFrame {
 		JLabel lblLng = new JLabel("Lương");
 		lblLng.setForeground(Color.GRAY);
 		lblLng.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblLng.setBounds(541, 603, 115, 34);
+		lblLng.setBounds(61, 630, 115, 34);
 		contentPane.add(lblLng);
 		
 		txtSalary = new JTextField();
 		txtSalary.setColumns(10);
-		txtSalary.setBounds(541, 642, 418, 35);
+		txtSalary.setBounds(61, 669, 418, 35);
 		txtSalary.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtSalary);
 		
@@ -198,10 +198,10 @@ public class addWorkerFrame extends JFrame {
 		      }
 		    }
 		  });
-		txtDOB.setBounds(541, 275, 418, 34);
+		txtDOB.setBounds(61, 564, 418, 34);
 		contentPane.add(txtDOB);
 		
-		lblNewLabel.setBounds(61, 109, 418, 568);
+		lblNewLabel.setBounds(61, 109, 159, 163);
 		contentPane.add(lblNewLabel);
 		
 		btnNewButton.addActionListener(new ActionListener() {
@@ -226,7 +226,7 @@ public class addWorkerFrame extends JFrame {
 	        }
 	    });
 		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnNewButton.setBounds(61, 775, 418, 41);
+		btnNewButton.setBounds(230, 231, 109, 35);
 		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setBackground(Color.BLUE);
 		contentPane.add(btnNewButton);
@@ -243,12 +243,12 @@ public class addWorkerFrame extends JFrame {
 		JLabel lblPhngBan = new JLabel("Phòng, Ban");
 		lblPhngBan.setForeground(Color.GRAY);
 		lblPhngBan.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		lblPhngBan.setBounds(541, 319, 115, 34);
+		lblPhngBan.setBounds(541, 358, 115, 34);
 		contentPane.add(lblPhngBan);
 		
 		JComboBox divisionCombobox = new JComboBox();
 		divisionCombobox.setBackground(Color.WHITE);
-		divisionCombobox.setBounds(541, 363, 418, 41);
+		divisionCombobox.setBounds(541, 394, 418, 41);
 		ArrayList<Division> divisionList = new ListDivision().list("*"," WHERE 1=1");
 		for (Division division : divisionList) {
 			divisionCombobox.addItem(division.getDivision_name());
