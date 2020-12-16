@@ -40,7 +40,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import database.DBConnection;
+import database.ListAdmin;
 import database.ListEngineer;
+import model.Admin;
 import model.AdminSession;
 import model.CustomButton;
 import model.DropShadowBorder;
@@ -54,17 +56,17 @@ import javax.swing.JOptionPane;
 import java.awt.CardLayout;
 import java.awt.Color;
 import javax.swing.UIManager;
+import javax.swing.JToggleButton;
 
 public class layout extends JFrame {
 
 	private JPanel contentPane;
+	JLayeredPane layeredPane = new JLayeredPane();
 	private JTable table;
 	private JTextField txtGender;
 	JDialog dialog = new JDialog();
 	private JTextField txtSearch;
 	DefaultTableModel model = new DefaultTableModel(); 
-	JLayeredPane layeredPane = new JLayeredPane();
-	
 	private int ad_id = 0;
 	private int role_id = 0;
 	
@@ -106,203 +108,19 @@ public class layout extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		layeredPane.setBounds(259, 10, 1258, 836);
+		layeredPane.setBounds(259, 67, 1258, 744);
 		contentPane.add(layeredPane);
 		layeredPane.setLayout(new CardLayout(0, 0));
 		
 		JPanel panelTable = new JPanel();
 		panelTable.setBackground(new Color(255, 255, 255));
 		layeredPane.add(panelTable, "detailForm");
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(46, 154, 1202, 547);
-		panelTable.add(scrollPane);
-
-		table = new JTable(model);
-		model = (DefaultTableModel) table.getModel();
-		table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-		table.getTableHeader().setOpaque(false);
-		table.getTableHeader().setBackground(new Color(32, 136, 203));
-		table.getTableHeader().setForeground(new Color(255, 255, 255));
-		table.setRowHeight(25);
-		table.setSelectionBackground(Color.pink);
-		model.addColumn("ID"); 
-        model.addColumn("Tên");
-        model.addColumn("Ngày Sinh");
-        model.addColumn("Giới Tính");
-        model.addColumn("Địa Chỉ");
-        model.addColumn("Lương");
-        model.addColumn("Vị Trí"); 
-        model.addColumn("Năm Bắt Đầu");
-        table.setRowSelectionAllowed(true);
-        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        refreshTable(model);
 		
+		//frame listStaff
 		
-		detailForm.setCellsAlignment(table,SwingConstants.CENTER);
-	
-		scrollPane.setViewportView(table);
-		
-
-        JButton btnAdd = new JButton(" THÊM");
-		btnAdd.setForeground(Color.WHITE);
-		btnAdd.setBackground(new Color(50, 205, 50));
-		if(role_id == 1) {
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					addFrame newframe = new addFrame();
-					newframe.setVisible(true);
-				}
-			});
-		}
-		else{
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
-				}
-			});
-//			setVisible(false);
-		}
-		panelTable.setLayout(null);
-		btnAdd.setIcon(new ImageIcon(detailForm.class.getResource("/assets/plus.png")));
-		
-		btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		btnAdd.setBounds(47, 111, 113, 33);
-		panelTable.add(btnAdd);
-		
-		
-		JButton btnEdit = new JButton();
-		btnEdit.setBackground(new Color(255, 255, 0));
-	    btnEdit.setIcon(new ImageIcon(detailForm.class.getResource("/assets/edit.png")));
-	    btnEdit.setText(" SỬA");
-	    btnEdit.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		StaffSession.cleanStaffSession();
-	    		if (table.getSelectedRows() != null) {
-		           int[] selectedrows = table.getSelectedRows();
-		           String staff_id = null;
-		           int position_id = 0;
-		           String sql = null;
-		           Connection connection = (Connection) DBConnection.getConnection();
-		           
-		           if(selectedrows.length == 1) {
-		        	    staff_id = table.getValueAt(selectedrows[0], 0).toString();
-	        	   		ArrayList<Engineer> enginnerList = new ListEngineer().list("position_id","WHERE staff_id = " + staff_id);
-	        			for (Engineer staff : enginnerList) {
-	        				position_id = staff.getPosition_id();
-	        			}
-	        	   		System.out.println(staff_id);
-	        	   		StaffSession.getInstance(Integer.parseInt(staff_id), position_id);
-	        	   		if(position_id == 1) {
-	        	   			editWorkerFrame workerFrame = null;
-							try {
-								workerFrame = new editWorkerFrame();
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-	        	   			workerFrame.setVisible(true);
-	        	   		}
-	        	   		else {
-	        	   			editEngineerFrame engineerFrame;
-							try {
-								engineerFrame = new editEngineerFrame();
-		        	   			engineerFrame.setVisible(true);
-							} catch (SQLException | IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} 
-	        	   		}
-		            }
-		            else JOptionPane.showMessageDialog(contentPane, "Hãy chọn 1 người để sửa!");
-			        }
-								
-			}
-	    });
-		btnEdit.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		btnEdit.setBounds(170, 111, 113, 33);
-		panelTable.add(btnEdit);
-		
-		JButton btnDelete = new JButton();
-		btnDelete.setBackground(new Color(255, 69, 0));
-		btnDelete.setIcon(new ImageIcon(detailForm.class.getResource("/assets/delete.png")));
-		btnDelete.setText("XÓA");
-		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (table.getSelectedRows() != null) {
-		           int[] selectedrows = table.getSelectedRows();
-		           String id = null;
-		           String sql = null;
-		           Connection connection = (Connection) DBConnection.getConnection();
-		           
-		           if(selectedrows.length > 0) {
-		        	   int response = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc muốn xóa?",
-                        "Bạn đang xóa " + selectedrows.length + " người này", 
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE); 
-		           
-			           if(response == 0) {
-			        	   for (int i = 0; i < selectedrows.length; i++) {
-			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
-			        	   		System.out.println(id);
-			        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
-				            	try {
-					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-					    			preparedStatement.execute();
-					    		} catch (SQLException e) {
-					    			// TODO Auto-generated catch block
-					    			e.printStackTrace();
-					    		}
-	
-				           }
-			    			refreshTable(model);
-			           }
-		           
-		            	
-		            }
-		            else JOptionPane.showMessageDialog(contentPane, "Bạn chưa chọn ai để xóa");
-		        }
-							
-			}
-		});
-		btnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		btnDelete.setBounds(295, 111, 113, 33);
-		panelTable.add(btnDelete);
-		
-		JLabel lblNewLabel = new JLabel("DANH SÁCH NHÂN VIÊN");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 25));
-		lblNewLabel.setBounds(477, 31, 302, 31);
-		panelTable.add(lblNewLabel);
-		
-		txtSearch = new JTextField();
-		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
-		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-		txtSearch.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
-		txtSearch.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				String query = txtSearch.getText().toLowerCase();
-				System.out.println(query);
-				filter(query);
-			}
-		});
-		txtSearch.setBounds(970, 107, 278, 33);
-		panelTable.add(txtSearch);
-		txtSearch.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("TÌM KIẾM");
-		lblNewLabel_1.setIcon(new ImageIcon(layout.class.getResource("/assets/search.png")));
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblNewLabel_1.setBounds(865, 107, 95, 33);
-		panelTable.add(lblNewLabel_1);
 		
 		JPanel panelAccount = new JPanel();
+		panelAccount.setBackground(Color.WHITE);
 		layeredPane.add(panelAccount, "accountForm");
 		
 		JButton btnPanelTable = new JButton("Danh Sách Nhân Viên");
@@ -315,6 +133,8 @@ public class layout extends JFrame {
 				switchPanel(panelTable);
 			}
 		});
+
+		new listStaffFrame().listStaffFrame(panelTable, role_id, ad_id);
 		btnPanelTable.setBorder(new MatteBorder(0,0,2,0,Color.WHITE));
 		btnPanelTable.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		btnPanelTable.setBounds(10, 165, 240, 53);
@@ -340,14 +160,46 @@ public class layout extends JFrame {
 	    panel.setBounds(0, 0, 259, 811);
 		contentPane.add(panel);
 		panel.setLayout(null);
-	}
-	public void refreshTable(DefaultTableModel model) {
-		model.setRowCount(0);
-		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id ORDER BY staff_id");
-		for (Engineer staff : enginnerList) {
-			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
-	        model.addRow(data);
+		
+		JButton btnDanhSchQun = new JButton("Danh Sách Quản Lý");
+		if(role_id == 1) {
+			btnDanhSchQun.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					switchPanel(panelAccount);
+				}
+			});
+			new listManagerFrame().listManagerFrame(panelAccount, role_id, ad_id);
 		}
+		else {
+			btnDanhSchQun.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
+				}
+			});
+		}
+		btnDanhSchQun.setIcon(new ImageIcon(layout.class.getResource("/assets/boss.png")));
+		btnDanhSchQun.setOpaque(false);
+		btnDanhSchQun.setForeground(Color.WHITE);
+		btnDanhSchQun.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		btnDanhSchQun.setBorder(new MatteBorder(0,0,2,0,Color.WHITE));
+		btnDanhSchQun.setBackground(new Color(250, 250, 250, 20));
+		btnDanhSchQun.setBounds(10, 235, 240, 53);
+		panel.add(btnDanhSchQun);
+		
+		JButton btnNewButton = new JButton("Đăng Xuất");
+		btnNewButton.setBounds(1370, 10, 147, 40);
+		contentPane.add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminSession.cleanadSession();
+				loginFrame nextFrame = new loginFrame();
+				nextFrame.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnNewButton.setBackground(Color.PINK);
+		btnNewButton.setIcon(new ImageIcon(layout.class.getResource("/assets/exit.png")));
+		btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 15));
 	}
 	
 	public void filter(String query) {

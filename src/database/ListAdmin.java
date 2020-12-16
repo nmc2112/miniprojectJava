@@ -43,6 +43,9 @@ public class ListAdmin extends DBConnection{
                         case "role_name":
                         	Admin.setRole_name(resultSet.getString(i));
                             break;
+                        case "ad_email":
+                        	Admin.setAd_email(resultSet.getString(i));
+                            break;
                         
                         default:
                             break;

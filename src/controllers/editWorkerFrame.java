@@ -163,10 +163,10 @@ public class editWorkerFrame extends JFrame {
 		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
-		JLabel lblAddStaff = new JLabel("Sửa Thông Tin");
+		JLabel lblAddStaff = new JLabel("Sửa Thông Tin Công Nhân");
 		lblAddStaff.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAddStaff.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		lblAddStaff.setBounds(388, 10, 231, 52);
+		lblAddStaff.setBounds(411, 10, 280, 52);
 		contentPane.add(lblAddStaff);
 		
 		JLabel lblBc = new JLabel("Bậc ");
@@ -255,12 +255,12 @@ public class editWorkerFrame extends JFrame {
 		lblnhiDin.setBounds(76, 56, 418, 25);
 		contentPane.add(lblnhiDin);
 		
-		JLabel lblPositionName = new JLabel();
-		lblPositionName.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		lblPositionName.setBounds(579, 19, 143, 34);
-		if(position_id == 2) lblPositionName.setText("Nhân Viên");
-		else lblPositionName.setText("Kỹ Sư");
-		contentPane.add(lblPositionName);
+//		JLabel lblPositionName = new JLabel();
+//		lblPositionName.setFont(new Font("Segoe UI", Font.BOLD, 20));
+//		lblPositionName.setBounds(579, 19, 143, 34);
+//		if(position_id == 2) lblPositionName.setText("Nhân Viên");
+//		else lblPositionName.setText("Kỹ Sư");
+//		contentPane.add(lblPositionName);
 		
 		
 

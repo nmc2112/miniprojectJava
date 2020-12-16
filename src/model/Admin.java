@@ -4,9 +4,18 @@ public class Admin {
 	private int ad_id;
 	private String ad_username;
 	private String ad_password;
+	private String ad_email;
 	private int role_id;
 	private String role_name;
 	
+	public String getAd_email() {
+		return ad_email;
+	}
+
+	public void setAd_email(String ad_email) {
+		this.ad_email = ad_email;
+	}
+
 	public Admin() {
 
 	}
