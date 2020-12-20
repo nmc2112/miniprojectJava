@@ -79,6 +79,12 @@ public class layout extends JFrame {
 	int startRow = 0;
 	int rowCount = 0;
 	int currentPage = 1;
+	int maxPagination = 1;
+	int currentPagination = 1;
+	JPanel paginationPanel;
+	JButton btnPrev;
+	JButton btnNext;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -324,57 +330,15 @@ public class layout extends JFrame {
 		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 25));
 		panelTable.add(lblNewLabel);
 		
-		
-		
-		JButton btnSearch = new JButton("TÌM KIẾM");
-		btnSearch.setBounds(1115, 111, 133, 33);
-		btnSearch.setIcon(new ImageIcon(layout.class.getResource("/assets/search.png")));
-		btnSearch.setBackground(Color.CYAN);
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String searchText = txtSearch.getText();
-				System.out.print(searchText);
-			}
-		});
-		btnSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		panelTable.add(btnSearch);
-		
-		JPanel paginationPanel = new JPanel();
+		paginationPanel = new JPanel();
 		paginationPanel.setBackground(Color.WHITE);
-		paginationPanel.setBounds(908, 673, 252, 58);
-		panelTable.add(paginationPanel);
-		paginationPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		paginationPanel.setBounds(822, 676, 426, 58);
 		
-		
-		JButton page1 = new JButton("1");
-		page1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnPrev = new JButton("Trước");
+		btnPrev.setIcon(new ImageIcon(layout.class.getResource("/assets/prev.png")));
+		btnPrev.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		paginationPanel.add(btnPrev);
 				
-			}
-		});
-		page1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		paginationPanel.add(page1);
-		
-		JButton page2 = new JButton("2");
-		page2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		page2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		paginationPanel.add(page2);
-		
-		JButton page3 = new JButton("3");
-		page3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		paginationPanel.add(page3);
-		
-		JButton page4 = new JButton("4");
-		page4.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		paginationPanel.add(page4);
-		
-		JButton page5 = new JButton("5");
-		page5.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		paginationPanel.add(page5);
 		
 		JLabel lblHienThi = new JLabel("Hiển Thị");
 		lblHienThi.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -393,25 +357,13 @@ public class layout extends JFrame {
             public void actionPerformed(ActionEvent event) {
             	rowsLimit = Integer.parseInt(rowscomboBox.getSelectedItem().toString());
 				refreshTableStaff(model, querySearch, rowsLimit , startRow);
-				rowCount = model.getColumnCount();
+				rowCount = getRowCountFromTableStaff(querySearch);
+				int page = getPaginationNumbers(rowCount, rowsLimit);
+				maxPagination = Math.round(page/5 + 1);
+				
             }
 		});
 		
-		txtSearch = new JTextField();
-		txtSearch.setBounds(860, 111, 245, 33);
-		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
-		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-		txtSearch.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
-		txtSearch.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				querySearch = txtSearch.getText().toLowerCase();
-				refreshTableStaff(model, querySearch, rowsLimit , startRow);
-				rowCount = model.getColumnCount();
-			}
-		});
-		panelTable.add(txtSearch);
-		txtSearch.setColumns(10);
 		
 		JLabel lblDng = new JLabel("Dòng");
 		lblDng.setHorizontalAlignment(SwingConstants.CENTER);
@@ -441,24 +393,87 @@ public class layout extends JFrame {
 		lblToPage.setBounds(283, 673, 30, 33);
 		panelTable.add(lblToPage);
 		
-		JButton btnNext = new JButton("");
-		btnNext.setBounds(1159, 676, 49, 29);
-		panelTable.add(btnNext);
-		btnNext.setIcon(new ImageIcon(layout.class.getResource("/assets/next.png")));
-		btnNext.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		
-		JButton btnPrev = new JButton("");
-		btnPrev.setBounds(853, 676, 56, 30);
-		panelTable.add(btnPrev);
-		btnPrev.setIcon(new ImageIcon(layout.class.getResource("/assets/prev.png")));
-		btnPrev.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		
 		
 		JLabel lblNewLabel_1 = new JLabel("TÌM KIẾM");
 		lblNewLabel_1.setIcon(new ImageIcon(layout.class.getResource("/assets/search.png")));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_1.setBounds(865, 107, 95, 33);
+		
+		
+		
+
+		panelTable.add(paginationPanel);
+		paginationPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JButton page1 = new JButton("1");
+		page1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refreshTableStaff(model, querySearch, rowsLimit,  (currentPage - 1) * rowsLimit * 5);
+			}
+		});
+		page1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		paginationPanel.add(page1);
+		
+		JButton page2 = new JButton("2");
+		page2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit);
+			}
+		});
+		page2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		paginationPanel.add(page2);
+		
+		JButton page3 = new JButton("3");
+		page3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		page3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit * 2);
+			}
+		});
+		paginationPanel.add(page3);
+		
+		JButton page4 = new JButton("4");
+		page4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit * 3);
+			}
+		});
+		page4.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		paginationPanel.add(page4);
+		
+		JButton page5 = new JButton("5");
+		page5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit * 4);
+			}
+		});
+		page5.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		paginationPanel.add(page5);
+		
+
+		btnNext = new JButton("Sau");
+		btnNext.setIcon(new ImageIcon(layout.class.getResource("/assets/next.png")));
+		btnNext.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		paginationPanel.add(btnNext);
+		
+		txtSearch = new JTextField();
+		txtSearch.setBounds(1003, 111, 245, 33);
+		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
+		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+		txtSearch.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				querySearch = txtSearch.getText().toLowerCase();
+				refreshTableStaff(model, querySearch, rowsLimit , startRow);
+				rowCount = getRowCountFromTableStaff(querySearch);
+				setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+			}
+		});
+		panelTable.add(txtSearch);
+		txtSearch.setColumns(10);
+		
 		//end staff frame
 		
 		
@@ -552,7 +567,8 @@ public class layout extends JFrame {
 		btnNewButton.setBackground(Color.PINK);
 		btnNewButton.setIcon(new ImageIcon(layout.class.getResource("/assets/exit.png")));
 		btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-	}
+	
+	}	
 	
 	public void filter(String query) {
 		TableRowSorter<DefaultTableModel> tablerow = new TableRowSorter<DefaultTableModel>(model);
@@ -598,6 +614,22 @@ public class layout extends JFrame {
 		
 	}
 	
+	public int getRowCountFromTableStaff(String query) {
+		String condition = " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id"
+				 + " WHERE s.staff_id LIKE '%" + query +"%'"
+		 		 + " OR s.staff_name LIKE '%" + query +"%'"
+				 + " OR s.staff_gender LIKE '%" + query +"%'"
+		 		 + " OR s.staff_DOB LIKE '%" + query +"%'"
+		 		 + " OR s.staff_gender LIKE '%" + query +"%'"
+		 		 + " OR s.staff_address LIKE '%" + query +"%'"
+		 		 + " OR s.staff_salary LIKE '%" + query +"%'"
+		 		 + " OR s.staff_startYearofwork LIKE '%" + query +"%'"
+		 		 + " OR p.position_name LIKE '%" + query +"%'"
+		 		 + " OR d.division_name LIKE '%" + query +"%'";
+		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
+		return enginnerList.size();
+	}
+	
 	public void refreshTableStaff(DefaultTableModel model, String condition) {
 		model.setRowCount(0);		
 		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
@@ -607,7 +639,15 @@ public class layout extends JFrame {
 		}
 	}
 	
-	public void setPaginationButtons(Integer totalRows, Integer rowsperPage) {
-		double pages = Math.ceil(totalRows/rowsperPage);
+	public int getPaginationNumbers(Integer totalRows, Integer rowsperPage) {
+		return Math.round(totalRows/rowsperPage + 1);
+	}
+	
+	public void setTextForButton(JButton page1, JButton page2, JButton page3, JButton page4, JButton page5, Integer currentPagination) {
+		page1.setText(Integer.toString((currentPagination - 1) * 5 + 1));
+		page2.setText(Integer.toString((currentPagination - 1) * 5 + 2));
+		page3.setText(Integer.toString((currentPagination - 1) * 5 + 3));
+		page4.setText(Integer.toString((currentPagination - 1) * 5 + 4));
+		page5.setText(Integer.toString((currentPagination - 1) * 5 + 5));
 	}
 }
