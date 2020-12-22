@@ -93,7 +93,7 @@ public class layout extends JFrame {
 	JLabel lbltotalPage;
 	JLabel lblFromPage;
 	JLabel lblToPage;
-	
+	int initialRowCount;
 	
 	/**
 	 * Launch the application.
@@ -116,8 +116,8 @@ public class layout extends JFrame {
 		ad_id = AdminSession.getInstanceId();
 		role_id = AdminSession.getInstanceroleId();
 		layoutComponent();
-		System.out.println(ad_id);
-		
+		refreshTableStaff(model, 10, 0);
+		setTextForButton(page1, page2, page3, page4, page5, currentPagination);
 	}
 	/**
 	 * Create the frame.
@@ -139,8 +139,6 @@ public class layout extends JFrame {
 		JPanel panelTable = new JPanel();
 		panelTable.setBackground(new Color(255, 255, 255));
 		layeredPane.add(panelTable, "detailForm");
-		
-		//frame listStaff
 		
 		
 		JPanel panelAccount = new JPanel();
@@ -349,13 +347,14 @@ public class layout extends JFrame {
 		btnPrev.setBorder(null);
 		btnPrev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(currentPage > 2) {
+				if(currentPage > 1) {
 					
 					currentPage--;
 					if(currentPage % 5 == 0) {
 						currentPagination --;
 						setTextForButton(page1, page2, page3, page4, page5, currentPagination);
 					}
+					
 					int surplus = currentPage % 5;
 					if(surplus == 0) surplus = 5;
 					refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
@@ -439,8 +438,8 @@ public class layout extends JFrame {
 		page1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentPage = Integer.parseInt(page1.getText());
-				fromRow = (currentPagination - 1) * rowsLimit * 5;
-				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				startRow = (currentPagination - 1) * rowsLimit * 5;
+				refreshTableStaff(model, querySearch, rowsLimit, startRow);
 				setTextForLabels();
 			}
 		});
@@ -451,8 +450,8 @@ public class layout extends JFrame {
 		page2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentPage = Integer.parseInt(page2.getText());
-				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit;
-				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				startRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit;
+				refreshTableStaff(model, querySearch, rowsLimit, startRow);
 				setTextForLabels();
 			}
 		});
@@ -464,8 +463,8 @@ public class layout extends JFrame {
 		page3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentPage = Integer.parseInt(page3.getText());
-				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 2;
-				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				startRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 2;
+				refreshTableStaff(model, querySearch, rowsLimit, startRow);
 				setTextForLabels();
 			}
 		});
@@ -475,8 +474,8 @@ public class layout extends JFrame {
 		page4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentPage = Integer.parseInt(page4.getText());
-				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 3;
-				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				startRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 3;
+				refreshTableStaff(model, querySearch, rowsLimit, startRow);
 				setTextForLabels();
 			}
 		});
@@ -487,8 +486,8 @@ public class layout extends JFrame {
 		page5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentPage = Integer.parseInt(page5.getText());
-				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 4;
-				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				startRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 4;
+				refreshTableStaff(model, querySearch, rowsLimit, startRow);
 				setTextForLabels();
 			}
 		});
@@ -502,14 +501,16 @@ public class layout extends JFrame {
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentPage++;
-				if(currentPage % 5 == 1) {
-					currentPagination ++;
-					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+				if(currentPage < maxPage) {
+					if(currentPage % 5 == 1) {
+						currentPagination ++;
+						setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+					}
+					int surplus = currentPage % 5;
+					if(surplus == 0) surplus = 5;
+					refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
+					setTextForLabels();
 				}
-				int surplus = currentPage % 5;
-				if(surplus == 0) surplus = 5;
-				refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
-				setTextForLabels();
 			}
 		});
 		btnNext.setIcon(new ImageIcon(layout.class.getResource("/assets/next.png")));
@@ -695,13 +696,22 @@ public class layout extends JFrame {
 			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(), staff.getDivision_name() ,staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
+	}
+	
+	public void refreshTableStaff(DefaultTableModel model, Integer maxEntries, Integer startEntry) {
+		model.setRowCount(0);
+		startRow = startEntry;
+		rowCount = getRowCountFromTableStaff();
+		rowsLimit = 10;
+		maxPage = Math.round(rowCount/rowsLimit + 1);
+		String condition = " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id"
+		 		 		 + " LIMIT " + startEntry + ", " + maxEntries;
+		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
 		
-		System.out.println("currentPage " + currentPage);
-		System.out.println("currentPagination " + currentPagination);
-		System.out.println("startEntry " + startEntry);
-		System.out.println("tableRows " + table.getRowCount());
-		System.out.println("++++++++++++++++++++++++++++");
-		
+		for (Engineer staff : enginnerList) {
+			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(), staff.getDivision_name() ,staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+	        model.addRow(data);
+		}
 	}
 	
 	public int getRowCountFromTableStaff(String query) {
@@ -720,6 +730,12 @@ public class layout extends JFrame {
 		return enginnerList.size();
 	}
 	
+	public int getRowCountFromTableStaff() {
+		String condition = " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id";
+		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
+		return enginnerList.size();
+	}
+	
 	public void refreshTableStaff(DefaultTableModel model, String condition) {
 		model.setRowCount(0);		
 		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
@@ -728,6 +744,8 @@ public class layout extends JFrame {
 	        model.addRow(data);
 		}
 	}
+	
+	
 	
 	public int getPageNumbers(Integer totalRows, Integer rowsperPage) {
 		maxPage = Math.round(totalRows/rowsperPage + 1);
@@ -749,12 +767,6 @@ public class layout extends JFrame {
 			page3.setText(Integer.toString((currentPagination - 1) * 5 + 3));
 			page4.setText(Integer.toString((currentPagination - 1) * 5 + 4));
 			page5.setText(Integer.toString((currentPagination - 1) * 5 + 5));
-			System.out.println("page1Text = " + page1.getText());
-			System.out.println("page2Text = " + page2.getText());
-			System.out.println("page3Text = " + page3.getText());
-			System.out.println("page4Text = " + page4.getText());
-			System.out.println("page5Text = " + page5.getText());
-			System.out.println("maxPage = " + maxPage);
 
 			setTextForLabels();
 			
@@ -811,7 +823,39 @@ public class layout extends JFrame {
 	
 	public void setTextForLabels() {
 		lblFromPage.setText(String.valueOf(startRow + 1));
+		
 		lblToPage.setText(String.valueOf(startRow + rowsLimit));
+		if(currentPage == maxPage) lblToPage.setText(String.valueOf(rowCount));
+		
 		lbltotalPage.setText(String.valueOf(rowCount));
+		setBackgroundForButton();
+	}
+	
+	public void setBackgroundForButton() {
+		setOriginStyleButton(page1);
+		setOriginStyleButton(page2);
+		setOriginStyleButton(page3);
+		setOriginStyleButton(page4);
+		setOriginStyleButton(page5);
+		
+		int surplus = currentPage % 5;
+		if(surplus == 0) surplus = 5;
+		switch(surplus) {
+			case 1: setStyleButton(page1); break;
+			case 2: setStyleButton(page2); break;
+			case 3: setStyleButton(page3); break;
+			case 4: setStyleButton(page4); break;
+			case 5: setStyleButton(page5); break;
+		}
+	}
+	
+	public void setStyleButton(JButton button) {
+		button.setBackground(Color.PINK);
+		button.setForeground(Color.white);
+	}
+	
+	public void setOriginStyleButton(JButton button) {
+		button.setBackground(null);
+		button.setForeground(Color.black);
 	}
 }
