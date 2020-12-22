@@ -52,7 +52,6 @@ public class addDivisionFrame extends JFrame {
 	 */
 	public addDivisionFrame() {
 		setBackground(Color.LIGHT_GRAY);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 561, 402);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
