@@ -31,6 +31,9 @@ import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
@@ -42,6 +45,7 @@ public class loginFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsername;
 	private JPasswordField txtPassword;
+	String salt = "kjsbdiaskdnasidka";
 
 	/**
 	 * Launch the application.
@@ -107,12 +111,13 @@ public class loginFrame extends JFrame {
 		txtUsername.setColumns(10);
 		txtUsername.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		
-		JButton btnNewButton = new JButton("\u0110\u0102NG NH\u1EACP");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnLogin = new JButton("\u0110\u0102NG NH\u1EACP");
+		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AdminSession.cleanadSession();
 				String ad_username = txtUsername.getText();
 				String ad_password = String.valueOf(txtPassword.getPassword());
+				ad_password = get_SHA_512_SecurePassword(ad_password, salt);
 				boolean flag = false;				
 				
 				ArrayList<Admin> AdminList = new ListAdmin().list("*"," INNER JOIN tblroles r ON r.role_id = a.role_id");
@@ -131,11 +136,11 @@ public class loginFrame extends JFrame {
 			}
 		});
 		
-		btnNewButton.setForeground(Color.WHITE);
-		btnNewButton.setBackground(Color.BLUE);
-		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnNewButton.setBounds(622, 433, 303, 35);
-		contentPane.add(btnNewButton);
+		btnLogin.setForeground(Color.WHITE);
+		btnLogin.setBackground(Color.BLUE);
+		btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnLogin.setBounds(622, 433, 303, 35);
+		contentPane.add(btnLogin);
 		
 		txtPassword = new JPasswordField();
 		txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -167,4 +172,22 @@ public class loginFrame extends JFrame {
 		
 		
 	}
+	
+	public String get_SHA_512_SecurePassword(String passwordToHash, String salt){
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(salt.getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++){
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
 }

@@ -121,7 +121,6 @@ public class listDivisionFrame {
 			           if(response == 0) {
 			        	   for (int i = 0; i < selectedrows.length; i++) {
 			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
-			        	   		System.out.println(id);
 			        	   		sql  = "DELETE FROM tbldivision WHERE division_id =" + id;
 				            	try {
 					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -168,7 +167,6 @@ public class listDivisionFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				String query = txtSearch.getText().toLowerCase();
-				System.out.println(query);
 				filter(query);
 			}
 		});

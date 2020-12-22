@@ -113,13 +113,13 @@ public class detailForm extends JFrame {
 		model = (DefaultTableModel) table.getModel();
 		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		model.addColumn("ID"); 
-        model.addColumn("Tên");
-        model.addColumn("Ngày Sinh");
-        model.addColumn("Giới Tính");
-        model.addColumn("Địa Chỉ");
-        model.addColumn("Lương");
-        model.addColumn("Vị Trí"); 
-        model.addColumn("Năm Bắt Đầu");
+        model.addColumn("TÃªn");
+        model.addColumn("NgÃ y Sinh");
+        model.addColumn("Giá»›i TÃ­nh");
+        model.addColumn("Ä�á»‹a Chá»‰");
+        model.addColumn("LÆ°Æ¡ng");
+        model.addColumn("Vá»‹ TrÃ­"); 
+        model.addColumn("NÄƒm Báº¯t Ä�áº§u");
         table.setRowSelectionAllowed(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         refreshTable(model);
@@ -139,7 +139,7 @@ public class detailForm extends JFrame {
 			}
 		});
 		btnAdd.setIcon(new ImageIcon(detailForm.class.getResource("/assets/plus.png")));
-		btnAdd.setText(" THÊM");
+		btnAdd.setText(" THÃŠM");
 		
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnAdd.setBounds(270, 115, 113, 33);
@@ -149,7 +149,7 @@ public class detailForm extends JFrame {
 		JButton btnEdit = new JButton();
 		btnEdit.setBackground(new Color(255, 255, 0));
 	    btnEdit.setIcon(new ImageIcon(detailForm.class.getResource("/assets/edit.png")));
-	    btnEdit.setText(" SỬA");
+	    btnEdit.setText(" Sá»¬A");
 	    btnEdit.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		
@@ -162,7 +162,7 @@ public class detailForm extends JFrame {
 		JButton btnDelete = new JButton();
 		btnDelete.setBackground(new Color(255, 69, 0));
 		btnDelete.setIcon(new ImageIcon(detailForm.class.getResource("/assets/delete.png")));
-		btnDelete.setText("XÓA");
+		btnDelete.setText("XÃ“A");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (table.getSelectedRows() != null) {
@@ -174,15 +174,14 @@ public class detailForm extends JFrame {
 		           
 		           if(selectedrows.length > 0) {
 		        	   int response = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc muốn xóa?",
-                        "Bạn đang xóa " + selectedrows.length + " người này", 
+                        "Báº¡n cÃ³ cháº¯c muá»‘n xÃ³a?",
+                        "Báº¡n Ä‘ang xÃ³a " + selectedrows.length + " ngÆ°á»�i nÃ y", 
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE); 
 		           
 			           if(response == 0) {
 			        	   for (int i = 0; i < selectedrows.length; i++) {
 			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
-			        	   		System.out.println(id);
 			        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
 				            	try {
 					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -198,7 +197,7 @@ public class detailForm extends JFrame {
 		           
 		            	
 		            }
-		            else JOptionPane.showMessageDialog(frame, "Bạn chưa chọn ai để xóa");
+		            else JOptionPane.showMessageDialog(frame, "Báº¡n chÆ°a chá»�n ai Ä‘á»ƒ xÃ³a");
 		        }
 							
 			}
@@ -207,7 +206,7 @@ public class detailForm extends JFrame {
 		btnDelete.setBounds(404, 115, 113, 33);
 		getContentPane().add(btnDelete);
 		
-		JLabel lblNewLabel = new JLabel("DANH SÁCH NHÂN VIÊN");
+		JLabel lblNewLabel = new JLabel("DANH SÃ�CH NHÃ‚N VIÃŠN");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
 		lblNewLabel.setBounds(630, 24, 320, 62);
@@ -226,7 +225,7 @@ public class detailForm extends JFrame {
 		getContentPane().add(txtSearch);
 		txtSearch.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Tìm Kiếm");
+		JLabel lblNewLabel_1 = new JLabel("TÃ¬m Kiáº¿m");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_1.setBounds(1126, 115, 107, 33);
@@ -242,7 +241,7 @@ public class detailForm extends JFrame {
 		model.setRowCount(0);
 		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id ORDER BY staff_id");
 		for (Engineer staff : enginnerList) {
-			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triệu",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
+			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(),Integer.toString(staff.getStaff_salary()) + " triá»‡u",staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
 	}

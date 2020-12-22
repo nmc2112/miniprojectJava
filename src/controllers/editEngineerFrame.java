@@ -96,8 +96,6 @@ public class editEngineerFrame extends JFrame {
 	public editEngineerFrame() throws SQLException, IOException {
 		staff_id = StaffSession.getInstanceId();
 		position_id = StaffSession.getInstancePositionId();
-		System.out.println("id = " + staff_id);
-		System.out.println("position_id = " + position_id);
 		
 		frameComponent();
 	}
@@ -364,7 +362,6 @@ public class editEngineerFrame extends JFrame {
 				if(flag == true && imgStatus == true) {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_major = ?, staff_level = ?, staff_startYearofwork = ?, staff_academiclevel = ?,  staff_img = ?, division_id = ? WHERE staff_id = ?" ;
-					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.setString(1, staff_name);
@@ -392,7 +389,6 @@ public class editEngineerFrame extends JFrame {
 				if(flag == true && imgStatus == false) {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_major = ?, staff_level = ?, staff_startYearofwork = ?, staff_academiclevel = ?, division_id = ? WHERE staff_id = ?" ;
-					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.setString(1, staff_name);

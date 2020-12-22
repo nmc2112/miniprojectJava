@@ -159,7 +159,6 @@ public class listStaffFrame {
 	        			for (Engineer staff : enginnerList) {
 	        				position_id = staff.getPosition_id();
 	        			}
-	        	   		System.out.println(staff_id);
 	        	   		StaffSession.getInstance(Integer.parseInt(staff_id), position_id);
 	        	   		if(position_id == 1) {
 	        	   			editWorkerFrame workerFrame = null;
@@ -215,7 +214,6 @@ public class listStaffFrame {
 			           if(response == 0) {
 			        	   for (int i = 0; i < selectedrows.length; i++) {
 			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
-			        	   		System.out.println(id);
 			        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
 				            	try {
 					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -425,7 +423,6 @@ public class listStaffFrame {
 		paginationPanel.add(btnNext);
 		
 		txtSearch = new JTextField();
-		txtSearch.setBounds(1003, 111, 245, 33);
 		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
 		txtSearch.setFont(new Font("Segoe UI", Font.PLAIN, 15));
 		txtSearch.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
@@ -448,8 +445,16 @@ public class listStaffFrame {
 				}
 			}
 		});
+		txtSearch.setBounds(970, 107, 278, 33);
 		panelTable.add(txtSearch);
 		txtSearch.setColumns(10);
+		
+		JLabel lblNewLabel_11 = new JLabel("TÌM KIẾM");
+		lblNewLabel_11.setIcon(new ImageIcon(layout.class.getResource("/assets/search.png")));
+		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_11.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblNewLabel_11.setBounds(865, 107, 95, 33);
+		panelTable.add(lblNewLabel_11);
 		
 		JLabel lblLcTTng = new JLabel("lọc từ tổng cộng");
 		lblLcTTng.setFont(new Font("Segoe UI", Font.PLAIN, 14));

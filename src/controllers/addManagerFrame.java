@@ -27,6 +27,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -38,6 +41,7 @@ public class addManagerFrame extends JFrame {
 	private JTextField txtName;
 	private JTextField txtEmail;
 	private JPasswordField passwordField;
+	String salt = "kjsbdiaskdnasidka";
 
 	/**
 	 * Launch the application.
@@ -122,6 +126,7 @@ public class addManagerFrame extends JFrame {
 				String ad_username = txtName.getText();
 				String ad_email = txtEmail.getText();
 				String ad_password = String.valueOf(passwordField.getPassword());
+				ad_password = get_SHA_512_SecurePassword(ad_password, salt);
 				int role_id = 0;
 				switch(rolecomboBox.getSelectedItem().toString()) {
 					case "Quản Lý" :{
@@ -143,7 +148,6 @@ public class addManagerFrame extends JFrame {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "INSERT INTO tbladmin(ad_username, ad_email, ad_password, role_id)"
 							+ " VALUES (?,?,?,?)";
-					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.setString(1, ad_username);
@@ -174,4 +178,22 @@ public class addManagerFrame extends JFrame {
 		contentPane.add(lblThmQunL);
 		
 	}
+	
+	public String get_SHA_512_SecurePassword(String passwordToHash, String salt){
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(salt.getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++){
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
 }

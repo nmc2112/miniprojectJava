@@ -93,7 +93,6 @@ public class addDivisionFrame extends JFrame {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "INSERT INTO tbldivision(division_name)"
 							+ " VALUES (?)";
-					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.setString(1, division_name);
