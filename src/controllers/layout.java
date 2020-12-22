@@ -80,10 +80,20 @@ public class layout extends JFrame {
 	int rowCount = 0;
 	int currentPage = 1;
 	int maxPagination = 1;
+	int maxPage = 1;
 	int currentPagination = 1;
 	JPanel paginationPanel;
 	JButton btnPrev;
 	JButton btnNext;
+	JButton page1;
+	JButton page2;
+	JButton page3;
+	JButton page4;	
+	JButton page5;
+	JLabel lbltotalPage;
+	JLabel lblFromPage;
+	JLabel lblToPage;
+	
 	
 	/**
 	 * Launch the application.
@@ -332,9 +342,28 @@ public class layout extends JFrame {
 		
 		paginationPanel = new JPanel();
 		paginationPanel.setBackground(Color.WHITE);
-		paginationPanel.setBounds(822, 676, 426, 58);
+		paginationPanel.setBounds(667, 676, 581, 58);
 		
 		btnPrev = new JButton("Trước");
+		btnPrev.setBackground(Color.WHITE);
+		btnPrev.setBorder(null);
+		btnPrev.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(currentPage > 2) {
+					
+					currentPage--;
+					if(currentPage % 5 == 0) {
+						currentPagination --;
+						setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+					}
+					int surplus = currentPage % 5;
+					if(surplus == 0) surplus = 5;
+					refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
+					setTextForLabels();
+				}
+				
+			}
+		});
 		btnPrev.setIcon(new ImageIcon(layout.class.getResource("/assets/prev.png")));
 		btnPrev.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		paginationPanel.add(btnPrev);
@@ -355,11 +384,13 @@ public class layout extends JFrame {
 		panelTable.add(rowscomboBox);
 		rowscomboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
+				reset();
             	rowsLimit = Integer.parseInt(rowscomboBox.getSelectedItem().toString());
 				refreshTableStaff(model, querySearch, rowsLimit , startRow);
 				rowCount = getRowCountFromTableStaff(querySearch);
-				int page = getPaginationNumbers(rowCount, rowsLimit);
-				maxPagination = Math.round(page/5 + 1);
+				maxPage = Math.round(rowCount/rowsLimit + 1);
+				maxPagination = getPaginationNumbers(rowCount, rowsLimit);
+				setTextForButton(page1, page2, page3, page4, page5, currentPagination);
 				
             }
 		});
@@ -371,26 +402,26 @@ public class layout extends JFrame {
 		lblDng.setBounds(773, 111, 64, 33);
 		panelTable.add(lblDng);
 		
-		JLabel lblDangHienThi = new JLabel("Đang hiển thị từ dòng");
+		JLabel lblDangHienThi = new JLabel("Hiển thị từ dòng");
 		lblDangHienThi.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblDangHienThi.setBounds(46, 673, 141, 33);
+		lblDangHienThi.setBounds(43, 673, 105, 33);
 		panelTable.add(lblDangHienThi);
 		
-		JLabel lblFromPage = new JLabel("1");
+		lblFromPage = new JLabel("100");
 		lblFromPage.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFromPage.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblFromPage.setBounds(184, 673, 30, 33);
+		lblFromPage.setBounds(148, 673, 30, 33);
 		panelTable.add(lblFromPage);
 		
 		JLabel lblDenDong = new JLabel("đến dòng");
 		lblDenDong.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblDenDong.setBounds(219, 673, 64, 33);
+		lblDenDong.setBounds(181, 673, 64, 33);
 		panelTable.add(lblDenDong);
 		
-		JLabel lblToPage = new JLabel("10");
+		lblToPage = new JLabel("100");
 		lblToPage.setHorizontalAlignment(SwingConstants.CENTER);
 		lblToPage.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblToPage.setBounds(283, 673, 30, 33);
+		lblToPage.setBounds(245, 673, 30, 33);
 		panelTable.add(lblToPage);
 		
 		
@@ -400,52 +431,65 @@ public class layout extends JFrame {
 		lblNewLabel_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_1.setBounds(865, 107, 95, 33);
 		
-		
-		
 
 		panelTable.add(paginationPanel);
 		paginationPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton page1 = new JButton("1");
+		page1 = new JButton("1");
 		page1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refreshTableStaff(model, querySearch, rowsLimit,  (currentPage - 1) * rowsLimit * 5);
+				currentPage = Integer.parseInt(page1.getText());
+				fromRow = (currentPagination - 1) * rowsLimit * 5;
+				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				setTextForLabels();
 			}
 		});
 		page1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		paginationPanel.add(page1);
 		
-		JButton page2 = new JButton("2");
+		page2 = new JButton("2");
 		page2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit);
+				currentPage = Integer.parseInt(page2.getText());
+				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit;
+				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				setTextForLabels();
 			}
 		});
 		page2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		paginationPanel.add(page2);
 		
-		JButton page3 = new JButton("3");
+		page3 = new JButton("3");
 		page3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		page3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit * 2);
+				currentPage = Integer.parseInt(page3.getText());
+				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 2;
+				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				setTextForLabels();
 			}
 		});
 		paginationPanel.add(page3);
 		
-		JButton page4 = new JButton("4");
+		page4 = new JButton("4");
 		page4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit * 3);
+				currentPage = Integer.parseInt(page4.getText());
+				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 3;
+				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				setTextForLabels();
 			}
 		});
 		page4.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		paginationPanel.add(page4);
 		
-		JButton page5 = new JButton("5");
+		page5 = new JButton("5");
 		page5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refreshTableStaff(model, querySearch, rowsLimit, (currentPage - 1) * rowsLimit * 5 + rowsLimit * 4);
+				currentPage = Integer.parseInt(page5.getText());
+				fromRow = (currentPagination - 1) * rowsLimit * 5 + rowsLimit * 4;
+				refreshTableStaff(model, querySearch, rowsLimit, fromRow);
+				setTextForLabels();
 			}
 		});
 		page5.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -453,6 +497,21 @@ public class layout extends JFrame {
 		
 
 		btnNext = new JButton("Sau");
+		btnNext.setBackground(Color.WHITE);
+		btnNext.setBorder(null);
+		btnNext.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentPage++;
+				if(currentPage % 5 == 1) {
+					currentPagination ++;
+					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+				}
+				int surplus = currentPage % 5;
+				if(surplus == 0) surplus = 5;
+				refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
+				setTextForLabels();
+			}
+		});
 		btnNext.setIcon(new ImageIcon(layout.class.getResource("/assets/next.png")));
 		btnNext.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		paginationPanel.add(btnNext);
@@ -466,13 +525,39 @@ public class layout extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				querySearch = txtSearch.getText().toLowerCase();
-				refreshTableStaff(model, querySearch, rowsLimit , startRow);
-				rowCount = getRowCountFromTableStaff(querySearch);
-				setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+				if(querySearch != "") {
+					reset();
+					rowCount = getRowCountFromTableStaff(querySearch);
+	            	rowsLimit = Integer.parseInt(rowscomboBox.getSelectedItem().toString());
+					refreshTableStaff(model, querySearch, rowsLimit , startRow);
+					maxPagination = getPaginationNumbers(rowCount, rowsLimit);
+					maxPage = Math.round(rowCount/rowsLimit + 1);
+					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+				}
+				else {
+					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+					refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
+				}
 			}
 		});
 		panelTable.add(txtSearch);
 		txtSearch.setColumns(10);
+		
+		JLabel lblLcTTng = new JLabel("lọc từ tổng cộng");
+		lblLcTTng.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblLcTTng.setBounds(278, 673, 113, 33);
+		panelTable.add(lblLcTTng);
+		
+		lbltotalPage = new JLabel("100");
+		lbltotalPage.setHorizontalAlignment(SwingConstants.CENTER);
+		lbltotalPage.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lbltotalPage.setBounds(387, 673, 30, 33);
+		panelTable.add(lbltotalPage);
+		
+		JLabel lblKtQu = new JLabel("kết quả");
+		lblKtQu.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblKtQu.setBounds(421, 673, 64, 33);
+		panelTable.add(lblKtQu);
 		
 		//end staff frame
 		
@@ -573,8 +658,6 @@ public class layout extends JFrame {
 	public void filter(String query) {
 		TableRowSorter<DefaultTableModel> tablerow = new TableRowSorter<DefaultTableModel>(model);
 		table.setRowSorter(tablerow);
-		
-		
 		if (query.trim().length() == 0) {
 			tablerow.setRowFilter(null);
         } else {
@@ -592,6 +675,7 @@ public class layout extends JFrame {
 	
 	public void refreshTableStaff(DefaultTableModel model, String query, Integer maxEntries, Integer startEntry) {
 		model.setRowCount(0);
+		startRow = startEntry;
 		
 		String condition = " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id"
 						 + " WHERE s.staff_id LIKE '%" + query +"%'"
@@ -605,12 +689,18 @@ public class layout extends JFrame {
 				 		 + " OR p.position_name LIKE '%" + query +"%'"
 				 		 + " OR d.division_name LIKE '%" + query +"%'"
 		 		 		 + " LIMIT " + startEntry + ", " + maxEntries;
-		System.out.println(condition);
 		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
+		
 		for (Engineer staff : enginnerList) {
 			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(), staff.getDivision_name() ,staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
 		}
+		
+		System.out.println("currentPage " + currentPage);
+		System.out.println("currentPagination " + currentPagination);
+		System.out.println("startEntry " + startEntry);
+		System.out.println("tableRows " + table.getRowCount());
+		System.out.println("++++++++++++++++++++++++++++");
 		
 	}
 	
@@ -639,15 +729,89 @@ public class layout extends JFrame {
 		}
 	}
 	
-	public int getPaginationNumbers(Integer totalRows, Integer rowsperPage) {
-		return Math.round(totalRows/rowsperPage + 1);
+	public int getPageNumbers(Integer totalRows, Integer rowsperPage) {
+		maxPage = Math.round(totalRows/rowsperPage + 1);
+		return maxPage;
 	}
 	
+	public int getPaginationNumbers(Integer totalRows, Integer rowsperPage) {
+		int page = getPageNumbers(totalRows, rowsperPage);
+		maxPagination = Math.round(page/5 + 1);
+		return maxPagination;
+	}
+	
+	
 	public void setTextForButton(JButton page1, JButton page2, JButton page3, JButton page4, JButton page5, Integer currentPagination) {
-		page1.setText(Integer.toString((currentPagination - 1) * 5 + 1));
-		page2.setText(Integer.toString((currentPagination - 1) * 5 + 2));
-		page3.setText(Integer.toString((currentPagination - 1) * 5 + 3));
-		page4.setText(Integer.toString((currentPagination - 1) * 5 + 4));
-		page5.setText(Integer.toString((currentPagination - 1) * 5 + 5));
+
+			paginationPanel.revalidate();
+			page1.setText(Integer.toString((currentPagination - 1) * 5 + 1));
+			page2.setText(Integer.toString((currentPagination - 1) * 5 + 2));
+			page3.setText(Integer.toString((currentPagination - 1) * 5 + 3));
+			page4.setText(Integer.toString((currentPagination - 1) * 5 + 4));
+			page5.setText(Integer.toString((currentPagination - 1) * 5 + 5));
+			System.out.println("page1Text = " + page1.getText());
+			System.out.println("page2Text = " + page2.getText());
+			System.out.println("page3Text = " + page3.getText());
+			System.out.println("page4Text = " + page4.getText());
+			System.out.println("page5Text = " + page5.getText());
+			System.out.println("maxPage = " + maxPage);
+
+			setTextForLabels();
+			
+			
+			if(Integer.parseInt(page1.getText()) > maxPage) {
+				page1.hide();
+			}
+			else page1.show();
+			
+			if(Integer.parseInt(page2.getText()) > maxPage) {
+				page2.hide();
+			}
+			else page2.show();
+			
+			if(Integer.parseInt(page3.getText()) > maxPage) {
+				page3.hide();
+			}
+			else page3.show();
+			
+			if(Integer.parseInt(page4.getText()) > maxPage) {
+				page4.hide();
+			}
+			else page4.show();
+			
+			if(Integer.parseInt(page5.getText()) > maxPage) {
+				page5.hide();
+			}
+			else page5.show();
+			
+	}
+	
+	public void reset() {
+		page1.setText("1");
+		page2.setText("2");
+		page3.setText("3");
+		page4.setText("4");
+		page5.setText("5");
+		page1.show();
+		page2.show();
+		page3.show();
+		page4.show();
+		page5.show();
+		startRow = 0;	
+		rowCount = 0;
+		currentPage = 1;
+		maxPagination = 1;
+		maxPage = 1;
+		currentPagination = 1;	
+		lblFromPage.setText("1");
+		lblToPage.setText("1");
+		lbltotalPage.setText("1");
+		
+	}
+	
+	public void setTextForLabels() {
+		lblFromPage.setText(String.valueOf(startRow + 1));
+		lblToPage.setText(String.valueOf(startRow + rowsLimit));
+		lbltotalPage.setText(String.valueOf(rowCount));
 	}
 }
