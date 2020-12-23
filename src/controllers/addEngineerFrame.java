@@ -144,7 +144,7 @@ public class addEngineerFrame extends JFrame {
 		txtStartYearOfWork.setBorder(new MatteBorder(0,0,2,0,Color.BLUE));
 		contentPane.add(txtStartYearOfWork);
 		
-		JLabel lblAddStaff = new JLabel("Thêm Nhân Viên");
+		JLabel lblAddStaff = new JLabel("Thêm Kỹ Sư");
 		lblAddStaff.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAddStaff.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		lblAddStaff.setBounds(388, 10, 331, 52);
