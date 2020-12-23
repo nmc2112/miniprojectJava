@@ -130,12 +130,22 @@ public class listStaffFrame {
 		
 		btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		panelTable.add(btnAdd);
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addFrame newframe = new addFrame();
-				newframe.setVisible(true);
-			}
-		});
+		if(role_id == 1 || role_id == 2) {
+			btnAdd.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					addFrame newframe = new addFrame();
+					newframe.setVisible(true);
+				}
+			});
+		}
+		else {
+			btnAdd.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
+				}
+			});
+		}
+		
 		
 		
 		JButton btnEdit = new JButton();
@@ -143,51 +153,61 @@ public class listStaffFrame {
 		btnEdit.setBackground(new Color(255, 255, 0));
 	    btnEdit.setIcon(new ImageIcon(detailForm.class.getResource("/assets/edit.png")));
 	    btnEdit.setText(" SỬA");
-	    btnEdit.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		StaffSession.cleanStaffSession();
-	    		if (table.getSelectedRows() != null) {
-		           int[] selectedrows = table.getSelectedRows();
-		           String staff_id = null;
-		           int position_id = 0;
-		           String sql = null;
-		           Connection connection = (Connection) DBConnection.getConnection();
-		           
-		           if(selectedrows.length == 1) {
-		        	    staff_id = table.getValueAt(selectedrows[0], 0).toString();
-	        	   		ArrayList<Engineer> enginnerList = new ListEngineer().list("position_id","WHERE staff_id = " + staff_id);
-	        			for (Engineer staff : enginnerList) {
-	        				position_id = staff.getPosition_id();
-	        			}
-	        	   		StaffSession.getInstance(Integer.parseInt(staff_id), position_id);
-	        	   		if(position_id == 1) {
-	        	   			editWorkerFrame workerFrame = null;
-							try {
-								workerFrame = new editWorkerFrame();
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-	        	   			workerFrame.setVisible(true);
-	        	   		}
-	        	   		else {
-							try {
-								engineerFrame = new editEngineerFrame();
-		        	   			engineerFrame.setVisible(true);
-							} catch (SQLException | IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} 
-	        	   		}
-		            }
-		            else JOptionPane.showMessageDialog(contentPane, "Hãy chọn 1 người để sửa!");
-			        }
-								
-			}
-	    });
+	    if(role_id == 1 || role_id == 2) {
+	    	btnEdit.addActionListener(new ActionListener() {
+		    	public void actionPerformed(ActionEvent e) {
+		    		StaffSession.cleanStaffSession();
+		    		if (table.getSelectedRows() != null) {
+			           int[] selectedrows = table.getSelectedRows();
+			           String staff_id = null;
+			           int position_id = 0;
+			           String sql = null;
+			           Connection connection = (Connection) DBConnection.getConnection();
+			           
+			           if(selectedrows.length == 1) {
+			        	    staff_id = table.getValueAt(selectedrows[0], 0).toString();
+		        	   		ArrayList<Engineer> enginnerList = new ListEngineer().list("position_id","WHERE staff_id = " + staff_id);
+		        			for (Engineer staff : enginnerList) {
+		        				position_id = staff.getPosition_id();
+		        			}
+		        	   		StaffSession.getInstance(Integer.parseInt(staff_id), position_id);
+		        	   		if(position_id == 1) {
+		        	   			editWorkerFrame workerFrame = null;
+								try {
+									workerFrame = new editWorkerFrame();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+		        	   			workerFrame.setVisible(true);
+		        	   		}
+		        	   		else {
+								try {
+									engineerFrame = new editEngineerFrame();
+			        	   			engineerFrame.setVisible(true);
+								} catch (SQLException | IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} 
+		        	   		}
+			            }
+			            else JOptionPane.showMessageDialog(contentPane, "Hãy chọn 1 người để sửa!");
+				        }
+									
+				}
+		    });
+		}
+		else {
+			btnEdit.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
+				}
+			});
+		}
+	    
 		btnEdit.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		panelTable.add(btnEdit);
 		
@@ -196,44 +216,53 @@ public class listStaffFrame {
 		btnDelete.setBackground(new Color(255, 69, 0));
 		btnDelete.setIcon(new ImageIcon(detailForm.class.getResource("/assets/delete.png")));
 		btnDelete.setText("XÓA");
-		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (table.getSelectedRows() != null) {
-		           int[] selectedrows = table.getSelectedRows();
-		           String id = null;
-		           String sql = null;
-		           Connection connection = (Connection) DBConnection.getConnection();
-		           
-		           if(selectedrows.length > 0) {
-		        	   int response = JOptionPane.showConfirmDialog(null,
-                        "Bạn có chắc muốn xóa?",
-                        "Bạn đang xóa " + selectedrows.length + " người này", 
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE); 
-		           
-			           if(response == 0) {
-			        	   for (int i = 0; i < selectedrows.length; i++) {
-			        	   		id = table.getValueAt(selectedrows[i], 0).toString();
-			        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
-				            	try {
-					    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
-					    			preparedStatement.execute();
-					    		} catch (SQLException e) {
-					    			// TODO Auto-generated catch block
-					    			e.printStackTrace();
-					    		}
-	
+		if(role_id == 1 || role_id == 2) {
+			btnDelete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (table.getSelectedRows() != null) {
+			           int[] selectedrows = table.getSelectedRows();
+			           String id = null;
+			           String sql = null;
+			           Connection connection = (Connection) DBConnection.getConnection();
+			           
+			           if(selectedrows.length > 0) {
+			        	   int response = JOptionPane.showConfirmDialog(null,
+	                        "Bạn có chắc muốn xóa?",
+	                        "Bạn đang xóa " + selectedrows.length + " người này", 
+	                        JOptionPane.YES_NO_OPTION,
+	                        JOptionPane.QUESTION_MESSAGE); 
+			           
+				           if(response == 0) {
+				        	   for (int i = 0; i < selectedrows.length; i++) {
+				        	   		id = table.getValueAt(selectedrows[i], 0).toString();
+				        	   		sql  = "DELETE FROM tblstaffs WHERE staff_id =" + id;
+					            	try {
+						    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+						    			preparedStatement.execute();
+						    		} catch (SQLException e) {
+						    			// TODO Auto-generated catch block
+						    			e.printStackTrace();
+						    		}
+		
+					           }
+				        	   refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
 				           }
-			        	   refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
-			           }
-		           
-		            	
-		            }
-		            else JOptionPane.showMessageDialog(contentPane, "Bạn chưa chọn ai để xóa");
-		        }
-							
-			}
-		});
+			           
+			            	
+			            }
+			            else JOptionPane.showMessageDialog(contentPane, "Bạn chưa chọn ai để xóa");
+			        }
+								
+				}
+			});
+		}
+		else {
+			btnDelete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JOptionPane.showMessageDialog(contentPane, "Bạn không có quyền này!");
+				}
+			});
+		}
 		btnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		panelTable.add(btnDelete);
 		
