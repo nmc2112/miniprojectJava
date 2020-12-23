@@ -129,7 +129,6 @@ public class listManagerFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				String query = txtSearch.getText().toLowerCase();
-				System.out.println(query);
 				filter(query);
 			}
 		});
@@ -170,7 +169,6 @@ public class listManagerFrame {
 				           if(response == 0) {
 				        	   for (int i = 0; i < selectedrows.length; i++) {
 				        	   		id = table.getValueAt(selectedrows[i], 0).toString();
-				        	   		System.out.println(id);
 				        	   		sql  = "DELETE FROM tbladmin WHERE ad_id =" + id;
 					            	try {
 						    			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);

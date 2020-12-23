@@ -97,8 +97,6 @@ public class editWorkerFrame extends JFrame {
 	public editWorkerFrame() throws SQLException, IOException {
 		staff_id = StaffSession.getInstanceId();
 		position_id = StaffSession.getInstancePositionId();
-		System.out.println("id = " + staff_id);
-		System.out.println("position_id = " + position_id);
 		
 		frameComponent();
 	}
@@ -325,7 +323,6 @@ public class editWorkerFrame extends JFrame {
 				if(flag == true && imgStatus == true) {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "UPDATE tblstaffs SET staff_name = ?, staff_DOB = ?, staff_gender = ?, staff_address = ?, staff_salary = ?, staff_major = ?, staff_level = ?, staff_startYearofwork = ?, staff_academiclevel = ?,  staff_img = ?, division_id = ? WHERE staff_id = ?" ;
-					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.setString(1, staff_name);
@@ -338,7 +335,6 @@ public class editWorkerFrame extends JFrame {
 						preparedStatement.setBlob(8, staff_img);
 						preparedStatement.setInt(9, division_id);
 						preparedStatement.setInt(10, staff_id);
-						System.out.println(sql);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
 						layout nextFrame = new layout();
@@ -364,7 +360,6 @@ public class editWorkerFrame extends JFrame {
 						preparedStatement.setInt(7, staff_startYearofwork);
 						preparedStatement.setInt(8, division_id);
 						preparedStatement.setInt(9, staff_id);
-						System.out.println(sql);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
 						layout nextFrame = new layout();

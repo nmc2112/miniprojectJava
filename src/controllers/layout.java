@@ -37,6 +37,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import database.DBConnection;
@@ -54,6 +55,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import javax.swing.UIManager;
 import javax.swing.JToggleButton;
+import java.awt.FlowLayout;
+import javax.swing.JComboBox;
 
 public class layout extends JFrame {
 
@@ -67,7 +70,9 @@ public class layout extends JFrame {
 	private int ad_id = 0;
 	private int role_id = 0;
 	
-
+	
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -89,8 +94,6 @@ public class layout extends JFrame {
 		ad_id = AdminSession.getInstanceId();
 		role_id = AdminSession.getInstanceroleId();
 		layoutComponent();
-		System.out.println(ad_id);
-		
 	}
 	/**
 	 * Create the frame.
@@ -113,8 +116,6 @@ public class layout extends JFrame {
 		panelTable.setBackground(new Color(255, 255, 255));
 		layeredPane.add(panelTable, "detailForm");
 		
-		//frame listStaff
-		
 		
 		JPanel panelAccount = new JPanel();
 		panelAccount.setBackground(Color.WHITE);
@@ -134,8 +135,12 @@ public class layout extends JFrame {
 				switchPanel(panelTable);
 			}
 		});
+		panelTable.setLayout(null);
 
 		new listStaffFrame().listStaffFrame(panelTable, role_id, ad_id);
+		//staff frame
+		
+		//end staff frame
 		
 		
 		btnPanelTable.setBorder(new MatteBorder(0,0,2,0,Color.WHITE));
@@ -228,13 +233,12 @@ public class layout extends JFrame {
 		btnNewButton.setBackground(Color.PINK);
 		btnNewButton.setIcon(new ImageIcon(layout.class.getResource("/assets/exit.png")));
 		btnNewButton.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-	}
+	
+	}	
 	
 	public void filter(String query) {
 		TableRowSorter<DefaultTableModel> tablerow = new TableRowSorter<DefaultTableModel>(model);
 		table.setRowSorter(tablerow);
-		
-		
 		if (query.trim().length() == 0) {
 			tablerow.setRowFilter(null);
         } else {
@@ -249,4 +253,6 @@ public class layout extends JFrame {
 		layeredPane.repaint();
 		layeredPane.revalidate();
 	}
+	
+	
 }
