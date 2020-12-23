@@ -272,7 +272,8 @@ public class listStaffFrame {
 		btnReload.setText("RELOAD");
 		btnReload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 refreshTableStaff(model);
+				 refreshTableStaff(model,10,0);
+				 setTextForButton(page1, page2, page3, page4, page5, currentPagination);
 			}
 		});
 		btnReload.setFont(new Font("Segoe UI", Font.PLAIN, 14));

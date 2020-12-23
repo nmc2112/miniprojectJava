@@ -292,7 +292,6 @@ public class addWorkerFrame extends JFrame {
 					Connection connection = (Connection) DBConnection.getConnection();
 					String sql  = "INSERT INTO tblstaffs(staff_name, staff_gender, staff_address, staff_salary, position_id, staff_startYearofwork, staff_DOB, staff_level, staff_img, division_id)"
 							+ " VALUES (?,?,?,?,?,?,?,?,?,?)";
-					System.out.println(sql);
 					try {
 						PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
 						preparedStatement.setString(1, staff_name);
