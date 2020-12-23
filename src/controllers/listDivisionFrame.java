@@ -153,6 +153,19 @@ public class listDivisionFrame {
 		btnDelete.setBounds(170, 111, 113, 33);
 		panelTable.add(btnDelete);
 		
+		JButton btnReload = new JButton();
+		btnReload.setBackground(Color.orange);
+		btnReload.setIcon(new ImageIcon(detailForm.class.getResource("/assets/reload.png")));
+		btnReload.setText("RELOAD");
+		btnReload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 refreshTableDivision(model);
+			}
+		});
+		btnReload.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnReload.setBounds(295, 111, 123, 33);
+		panelTable.add(btnReload);
+		
 		JLabel lblNewLabel = new JLabel("DANH SÁCH PHÒNG BAN");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 25));

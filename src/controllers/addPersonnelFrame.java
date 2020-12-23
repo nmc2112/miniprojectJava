@@ -334,8 +334,6 @@ public class addPersonnelFrame extends JFrame {
 						preparedStatement.setInt(12, division_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block

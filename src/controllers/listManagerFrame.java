@@ -110,8 +110,6 @@ public class listManagerFrame {
 		btnAdd.setBounds(47, 111, 113, 33);
 		panelTable.add(btnAdd);
 		
-
-		
 		JButton btnDelete = new JButton();
 		btnDelete.setBackground(new Color(255, 69, 0));
 		btnDelete.setIcon(new ImageIcon(detailForm.class.getResource("/assets/delete.png")));
@@ -120,6 +118,19 @@ public class listManagerFrame {
 		btnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		btnDelete.setBounds(170, 111, 113, 33);
 		panelTable.add(btnDelete);
+		
+		JButton btnReload = new JButton();
+		btnReload.setBackground(Color.orange);
+		btnReload.setIcon(new ImageIcon(detailForm.class.getResource("/assets/reload.png")));
+		btnReload.setText("RELOAD");
+		btnReload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 refreshTableManager(model);
+			}
+		});
+		btnReload.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnReload.setBounds(295, 111, 123, 33);
+		panelTable.add(btnReload);
 		
 		txtSearch = new JTextField();
 		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);

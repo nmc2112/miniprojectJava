@@ -167,7 +167,7 @@ public class addWorkerFrame extends JFrame {
 		
 		JButton btnAdd = new JButton("THÊM");
 		btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnAdd.setBounds(541, 775, 418, 41);
+		btnAdd.setBounds(299, 772, 418, 41);
 		btnAdd.setBackground(Color.GREEN);
 		contentPane.add(btnAdd);
 		
@@ -307,8 +307,6 @@ public class addWorkerFrame extends JFrame {
 						preparedStatement.setInt(10, division_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block

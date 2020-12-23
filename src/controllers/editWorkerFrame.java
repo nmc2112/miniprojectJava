@@ -337,8 +337,6 @@ public class editWorkerFrame extends JFrame {
 						preparedStatement.setInt(10, staff_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block
@@ -362,8 +360,6 @@ public class editWorkerFrame extends JFrame {
 						preparedStatement.setInt(9, staff_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block

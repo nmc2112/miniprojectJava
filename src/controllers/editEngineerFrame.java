@@ -378,8 +378,6 @@ public class editEngineerFrame extends JFrame {
 						preparedStatement.setInt(12, staff_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block
@@ -404,8 +402,6 @@ public class editEngineerFrame extends JFrame {
 						preparedStatement.setInt(11, staff_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Cập nhật thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block

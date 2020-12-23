@@ -266,6 +266,19 @@ public class listStaffFrame {
 		btnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		panelTable.add(btnDelete);
 		
+		JButton btnReload = new JButton();
+		btnReload.setBackground(Color.orange);
+		btnReload.setIcon(new ImageIcon(detailForm.class.getResource("/assets/reload.png")));
+		btnReload.setText("RELOAD");
+		btnReload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 refreshTableStaff(model);
+			}
+		});
+		btnReload.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnReload.setBounds(420, 111, 123, 33);
+		panelTable.add(btnReload);
+		
 		JLabel lblNewLabel = new JLabel("DANH SÁCH NHÂN VIÊN");
 		lblNewLabel.setBounds(477, 31, 302, 31);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);

@@ -98,8 +98,6 @@ public class addDivisionFrame extends JFrame {
 						preparedStatement.setString(1, division_name);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block

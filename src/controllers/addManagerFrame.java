@@ -156,8 +156,6 @@ public class addManagerFrame extends JFrame {
 						preparedStatement.setInt(4, role_id);
 						preparedStatement.execute();
 						JOptionPane.showMessageDialog(contentPane ,"Người này đã được thêm thành công!");
-						layout nextFrame = new layout();
-						nextFrame.setVisible(true);
 						setVisible(false);
 					} catch (SQLException e1 ) {
 						// TODO Auto-generated catch block
