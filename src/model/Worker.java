@@ -2,19 +2,21 @@ package model;
 
 public class Worker extends Staff {
 	
-	private int worker_level;
+	private int staff_level;
 
 	public Worker() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getWorker_level() {
-		return worker_level;
+	public int getStaff_level() {
+		return staff_level;
 	}
 
-	public void setWorker_level(int worker_level) {
-		this.worker_level = worker_level;
+	public void setStaff_level(int staff_level) {
+		this.staff_level = staff_level;
 	}
+
+
 	
 	
 
