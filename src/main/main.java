@@ -19,7 +19,6 @@ public class main{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					
 					loginFrame frame = new loginFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {

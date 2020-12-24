@@ -450,7 +450,7 @@ public class listStaffFrame {
 				if(currentPage < maxPage) {
 					currentPage++;
 				}
-				if(currentPage % 5 == 1) {
+				if(currentPage % 5 == 1 && currentPage != 1) {
 					currentPagination ++;
 					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
 				}
@@ -481,6 +481,10 @@ public class listStaffFrame {
 					maxPagination = getPaginationNumbers(rowCount, rowsLimit);
 					maxPage = Math.round(rowCount/rowsLimit + 1);
 					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+					
+					System.out.println("rowsLimit = " + rowsLimit);
+					System.out.println("maxPagination = " + maxPagination);
+					System.out.println("maxPage = " + maxPage);
 				}
 				else {
 					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
