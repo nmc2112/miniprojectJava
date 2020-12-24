@@ -114,7 +114,7 @@ public class listStaffFrame {
         }
         
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
+        refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id ORDER BY s.staff_id DESC");
 		
 		
 		detailForm.setCellsAlignment(table,SwingConstants.CENTER);
@@ -245,7 +245,7 @@ public class listStaffFrame {
 						    		}
 		
 					           }
-				        	   refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
+				        	   refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id ORDER BY s.staff_id DESC");
 				           }
 			           
 			            	
@@ -488,7 +488,7 @@ public class listStaffFrame {
 				}
 				else {
 					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
-					refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
+					refreshTableStaff(model, " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id ORDER BY s.staff_id DESC");
 				}
 			}
 		});
@@ -526,7 +526,7 @@ public class listStaffFrame {
 	
 	public void refreshTableStaff(DefaultTableModel model) {
 		model.setRowCount(0);
-		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id");
+		ArrayList<Engineer> enginnerList = new ListEngineer().list("*"," INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id ORDER BY s.staff_id DESC");
 		for (Engineer staff : enginnerList) {
 			String data[] = { Integer.toString(staff.getStaff_id()),staff.getStaff_name(),staff.getStaff_DOB(),staff.getStaff_gender(),staff.getStaff_address(), staff.getDivision_name() ,staff.getPosition_name(),Integer.toString(staff.getStaff_startYearofwork())};
 	        model.addRow(data);
@@ -567,6 +567,7 @@ public class listStaffFrame {
 				 		 + " OR s.staff_startYearofwork LIKE '%" + query +"%'"
 				 		 + " OR p.position_name LIKE '%" + query +"%'"
 				 		 + " OR d.division_name LIKE '%" + query +"%'"
+				 		 + " ORDER BY s.staff_id DESC"
 		 		 		 + " LIMIT " + startEntry + ", " + maxEntries;
 		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
 		
@@ -583,7 +584,7 @@ public class listStaffFrame {
 		rowsLimit = 10;
 		maxPage = Math.round(rowCount/rowsLimit + 1);
 		String condition = " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id"
-		 		 		 + " LIMIT " + startEntry + ", " + maxEntries;
+		 		 		  + " ORDER BY s.staff_id DESC" + " LIMIT " + startEntry + ", " + maxEntries;
 		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
 		
 		for (Engineer staff : enginnerList) {
@@ -609,7 +610,7 @@ public class listStaffFrame {
 	}
 	
 	public int getRowCountFromTableStaff() {
-		String condition = " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id";
+		String condition = " INNER JOIN tblpositions p ON p.position_id = s.position_id INNER JOIN tbldivision d ON d.division_id = s.division_id ORDER BY s.staff_id DESC";
 		ArrayList<Engineer> enginnerList = new ListEngineer().list("*", condition);
 		return enginnerList.size();
 	}
