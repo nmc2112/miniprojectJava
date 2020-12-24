@@ -296,18 +296,17 @@ public class listStaffFrame {
 		btnPrev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(currentPage > 1) {
-					
 					currentPage--;
-					if(currentPage % 5 == 0) {
-						currentPagination --;
-						setTextForButton(page1, page2, page3, page4, page5, currentPagination);
-					}
-					
-					int surplus = currentPage % 5;
-					if(surplus == 0) surplus = 5;
-					refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
-					setTextForLabels();
 				}
+				if(currentPage % 5 == 0) {
+					currentPagination --;
+					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+				}
+				int surplus = currentPage % 5;
+				if(surplus == 0) surplus = 5;
+				refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
+				setTextForLabels();
+				
 				
 			}
 		});
@@ -448,17 +447,18 @@ public class listStaffFrame {
 		btnNext.setBorder(null);
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				currentPage++;
 				if(currentPage < maxPage) {
-					if(currentPage % 5 == 1) {
-						currentPagination ++;
-						setTextForButton(page1, page2, page3, page4, page5, currentPagination);
-					}
-					int surplus = currentPage % 5;
-					if(surplus == 0) surplus = 5;
-					refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
-					setTextForLabels();
+					currentPage++;
 				}
+				if(currentPage % 5 == 1) {
+					currentPagination ++;
+					setTextForButton(page1, page2, page3, page4, page5, currentPagination);
+				}
+				int surplus = currentPage % 5;
+				if(surplus == 0) surplus = 5;
+				refreshTableStaff(model, querySearch, rowsLimit, (currentPagination - 1) * rowsLimit * 5 + rowsLimit * (surplus - 1));
+				setTextForLabels();
+				
 			}
 		});
 		btnNext.setIcon(new ImageIcon(layout.class.getResource("/assets/next.png")));
@@ -642,8 +642,8 @@ public class listStaffFrame {
 			page4.setText(Integer.toString((currentPagination - 1) * 5 + 4));
 			page5.setText(Integer.toString((currentPagination - 1) * 5 + 5));
 
+			paginationPanel.revalidate();
 			setTextForLabels();
-			
 			
 			if(Integer.parseInt(page1.getText()) > maxPage) {
 				page1.hide();
