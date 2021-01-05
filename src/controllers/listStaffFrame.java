@@ -220,6 +220,7 @@ public class listStaffFrame {
 			btnDelete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (table.getSelectedRows() != null) {
+						
 			           int[] selectedrows = table.getSelectedRows();
 			           String id = null;
 			           String sql = null;
